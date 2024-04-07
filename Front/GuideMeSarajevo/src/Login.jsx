@@ -22,15 +22,26 @@ const LoginForm = () => {
     }
   };
 
+  const handleOAuthLogin = async () => {
+  try {
+    // Send a request to the backend to initiate the OAuth flow
+    await axios.get('http://localhost:8080/oauth2/authorize/google');
+  } catch (error) {
+    console.error('OAuth2 login failed:', error);
+  }
+};
+
   return (
     <div>
       <h2>Login</h2>
       <form className="login-form" onSubmit={handleLogin}>
         <label>Username:</label>
-        <input type="userName" value={userName} onChange={(e) => setUsername(e.target.value)} required />
+        <input type="text" value={userName} onChange={(e) => setUsername(e.target.value)} required />
         <label>Password:</label>
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         <button type="submit">Login</button>
+        <span>--------</span>
+        <button onClick={handleOAuthLogin}>Login with Google</button>
       </form>
     </div>
   );
