@@ -1,0 +1,13 @@
+.map-container {
+  display: flex;
+  height: 40vh;
+}
+
+.search-bar {
+  flex: 1;
+  padding: 10px;
+}
+
+.google-map {
+  flex: 2;
+}

@@ -1,0 +1,83 @@
+.header {
+  background-color: #eba833;
+  color: #fff;
+  padding: 5px;
+  display: flex; /* Use flexbox */
+  justify-content: space-between; /* Space elements evenly */
+  align-items: center; /* Align items vertically */
+  position: fixed;
+  width: 100%;
+  z-index: 1;
+}
+
+h1 {
+  margin-left: 10vh;
+}
+
+.navList {
+  list-style-type: none;
+  padding: 0;
+  margin-right: 10vh;
+}
+
+.navList li {
+  display: inline-block; /* Display list items horizontally */
+}
+
+.navList li:not(:last-child) {
+  margin-right: 10px; /* Add some spacing between list items */
+}
+
+#btnLi {
+  background-color: #fff;
+  text-decoration: none;
+  color: black;
+  border-radius: 22px;
+  padding: 10px 20px; /* Add padding to increase button size */
+  font-size: 18px; /* Increase font size */
+  /* Add border for button appearance */
+  transition: all 0.3s ease; /* Add transition for smooth hover effect */
+}
+
+.navList a {
+  text-decoration: none;
+  color: #fff;
+  padding: 10px 20px; /* Add padding to increase button size */
+  font-size: 18px; /* Increase font size */
+  transition: all 0.3s ease; /* Add transition for smooth hover effect */
+}
+
+.navList a:hover {
+  color: #333;
+}
+
+#btnLi:hover {
+  background-color: #333;
+  color: #fff;
+}
+
+.navToggle {
+  display: none; /* Hide the toggle button by default */
+}
+
+@media screen and (max-width: 696px) {
+  .navList {
+    display: none; /* Hide the list items */
+  }
+
+  .navList.show {
+    display: block; /* Show the list items when the hamburger button is clicked */
+  }
+
+  .navToggle {
+    display: block; /* Show the hamburger button */
+  }
+
+  .navToggle button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 10px;
+  }
+}

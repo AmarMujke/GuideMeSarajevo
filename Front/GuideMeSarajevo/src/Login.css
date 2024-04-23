@@ -1,6 +1,6 @@
 .login-form {
   max-width: 300px;
-  margin: 0 auto; 
+  margin: 0 auto;
 }
 
 .login-form form {
@@ -13,32 +13,18 @@
 }
 
 .login-form input {
-  width: 100%; /* Ensure input elements take up full width */
+  width: 95%; /* Ensure input elements take up full width */
   padding: 8px;
   margin-bottom: 10px; /* Add some space below each input */
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
-.login-form button {
+button {
   width: 100%; /* Ensure button takes up full width */
   padding: 10px 15px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.login-form button:hover {
-  background-color: #0056b3;
-}
-
-#googleBtn{
-    width: 100%; /* Ensure button takes up full width */
-  padding: 10px 15px;
   margin-top: 3%;
-  background-color: #007bff;
+  background-color: #eba833;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -46,5 +32,12 @@
 }
 
 #googleBtn button:hover {
-   background-color: #0056b3;
+  background-color: #b3873c;
+}
+
+#wrapper {
+  align-items: center;
+  padding: 20%;
+  background-color: #393939;
+  color: #fff;
 }
