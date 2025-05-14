@@ -1,32 +1,61 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "./context/AuthContext";
 import "./nav.css";
 
 function Nav() {
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const { isLoggedIn, logout } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log('Current login state:', isLoggedIn);
+    console.log('Local Storage:', {
+      token: localStorage.getItem('token'),
+      email: localStorage.getItem('email')
+    });
+  }, [isLoggedIn]);
 
   const toggleNav = () => {
     setIsNavOpen(!isNavOpen);
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   return (
     <header className="header">
-      <h1>GuideMeSarajevo</h1>
+      <Link to="/" className="logo-link">
+        <h1>GuideMeSarajevo</h1>
+      </Link>
       <nav>
         <ul className={isNavOpen ? "navList show" : "navList"}>
           <li>
-            <a href="#">Home</a>
+            <Link to="/">Home</Link>
           </li>
           <li>
-            <a href="#">Routes</a>
+            <Link to="/routes">Routes</Link>
           </li>
           <li>
-            <a href="#">Contact</a>
+            <Link to="/contact">Contact</Link>
           </li>
           <li>
-            <a id="btnLi" href="/login">
-              Login
-            </a>
+            {isLoggedIn ? (
+              <div className="profile-section">
+                <Link to="/profile" className="profile-link">
+                  <i className="fas fa-user-circle"></i>
+                </Link>
+                <button onClick={handleLogout} className="logout-button">
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <Link to="/login" className="login-button">
+                Login
+              </Link>
+            )}
           </li>
         </ul>
         <div className="navToggle">

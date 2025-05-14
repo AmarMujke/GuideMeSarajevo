@@ -1,65 +1,61 @@
-import React, { useState } from "react";
-// import axios from "axios";
-import { useNavigate } from "react-router";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "./context/AuthContext";
+import Nav from "./nav";
+import api from "./api"; 
 import "./Login.css";
 
-const LoginForm = () => {
-  const [userName, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const navigateTo = useNavigate();
+const Login = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [message, setMessage] = useState("");
 
-  function goHome() {
-    navigateTo("/");
-  }
-
-  //   const handleLogin = async (e) => {
-  //     e.preventDefault();
-
-  //     try {
-  //       const response = await axios.post('http://localhost:8080/login', {
-  //         userName: userName,
-  //         password: password,
-  //       });
-
-  //       console.log('Login successful:', response.data);
-
-  //     } catch (error) {
-  //       console.error('Login failed:', error);
-  //     }
-  //   };
-
-  //   const handleOAuthLogin = async () => {
-  //   try {
-  //     // Send a request to the backend to initiate the OAuth flow
-  //     await axios.get('http://localhost:8080/oauth2/authorize/google');
-  //   } catch (error) {
-  //     console.error('OAuth2 login failed:', error);
-  //   }
-  // };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      console.log('Attempting login with:', formData);
+      const response = await api.post("/api/auth/login", formData);
+      console.log('Login response:', response.data);
+      login(response.data); 
+      console.log('After login - localStorage:', {
+        token: localStorage.getItem('token'),
+        email: localStorage.getItem('email')
+      });
+      navigate('/');
+    } catch (error) {
+      console.error('Login error:', error);
+      setMessage(error.response?.data || "An error occurred");
+    }
+  };
 
   return (
-    <div id="wrapper">
-      <form className="login-form">
-        <label>Username:</label>
-        <input
-          type="text"
-          value={userName}
-          onChange={e => setUsername(e.target.value)}
-          required
-        />
-        <label>Password:</label>
-        <input
-          type="password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit">Login</button>
-        <span>--------------------------------------------------------</span>
-        <button onClick={goHome}>Login with Google</button>
-      </form>
-    </div>
+    <>
+      <Nav />
+      <div className="login-container">
+        <form onSubmit={handleSubmit} className="login-form">
+          <h2>Login</h2>
+          <input
+            type="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+          />
+          <button type="submit">Login</button>
+          {message && <p className="message error">{message}</p>}
+          <p className="register-link">
+            {"Don't have an account? "} <Link to="/register">Register here</Link>
+          </p>
+        </form>
+      </div>
+    </>
   );
 };
 
-export default LoginForm;
+export default Login;

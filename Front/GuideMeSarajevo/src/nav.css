@@ -1,5 +1,5 @@
 .header {
-  background-color: #eba833;
+  background-color: rgba(0, 0, 0, 0.8);
   color: #fff;
   padding: 5px;
   display: flex; /* Use flexbox */
@@ -8,16 +8,30 @@
   position: fixed;
   width: 100%;
   z-index: 1;
+  backdrop-filter: blur(5px);
+  height: 6vh;
+}
+
+.logo-link {
+  text-decoration: none;
+  color: #fff;
+}
+
+.logo-link:hover {
+  color: #eba833;
 }
 
 h1 {
   margin-left: 10vh;
+  transition: color 0.3s ease;
 }
 
 .navList {
   list-style-type: none;
   padding: 0;
   margin-right: 10vh;
+  display: flex;
+  align-items: center;
 }
 
 .navList li {
@@ -48,7 +62,7 @@ h1 {
 }
 
 .navList a:hover {
-  color: #333;
+  color: #eba833;
 }
 
 #btnLi:hover {
@@ -61,23 +75,130 @@ h1 {
 }
 
 @media screen and (max-width: 696px) {
+  h1 {
+    margin-left: 2vh;
+    font-size: 1.5rem;
+  }
+
   .navList {
-    display: none; /* Hide the list items */
+    display: none;
+    position: absolute;
+    top: 6vh;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    margin: 0;
+    padding: 1rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
   }
 
   .navList.show {
-    display: block; /* Show the list items when the hamburger button is clicked */
+    display: flex;
+  }
+
+  .navList li {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+
+  .navList li:not(:last-child) {
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+
+  .navList a {
+    display: block;
+    padding: 1rem;
+    font-size: 1.2rem;
+  }
+
+  .profile-section {
+    flex-direction: column;
+    width: 100%;
+    gap: 1rem;
+  }
+
+  .profile-link {
+    font-size: 2rem;
+  }
+
+  .logout-button {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.2rem;
+  }
+
+  .login-button {
+    width: 100%;
+    text-align: center;
   }
 
   .navToggle {
-    display: block; /* Show the hamburger button */
+    display: block;
+    margin-right: 2vh;
   }
 
   .navToggle button {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 24px;
     padding: 10px;
+    color: #fff;
+    transition: color 0.3s ease;
   }
+
+  .navToggle button:hover {
+    color: #eba833;
+  }
+}
+
+.profile-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.profile-link {
+  color: #fff;
+  font-size: 1.5rem;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.profile-link:hover {
+  color: #eba833;
+}
+
+.logout-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 22px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #c82333;
+}
+
+.login-button {
+  background-color: #fff;
+  text-decoration: none;
+  color: black!important;
+  border-radius: 22px;
+  padding: 10px 20px;
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #eba833;
+  color: black;
 }

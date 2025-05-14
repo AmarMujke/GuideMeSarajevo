@@ -1,0 +1,147 @@
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #FFF3E0 0%, #FFC107 100%);
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .register-form {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-sizing: border-box;
+  }
+  
+  .register-form h2 {
+    color: #FFB300;
+    margin-bottom: 1.5rem;
+    font-family: "Arial", sans-serif;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  
+  .register-form input {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    margin: 0.5rem auto;
+    border: 2px solid #FFD54F;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+  }
+  
+  .register-form input:focus {
+    border-color: #FFB300;
+  }
+  
+  .register-form button {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    margin: 1rem auto 0;
+    background-color: #FFC107;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-sizing: border-box;
+  }
+  
+  .register-form button:hover {
+    background-color: #FFB300;
+  }
+  
+  .register-form .message {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .register-form .message.success {
+    color: #4CAF50; 
+  }
+  
+  .register-form .message.error {
+    color: #D81B60; 
+  }
+
+  .register-form .register-link {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  .register-form .register-link a {
+    color: #FFB300;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .register-form .register-link a:hover {
+    text-decoration: underline;
+  }
+
+  @media screen and (max-width: 768px) {
+    .register-container {
+      padding: 15px;
+    }
+
+    .register-form {
+      padding: 1.5rem;
+    }
+
+    .register-form h2 {
+      font-size: 1.75rem;
+    }
+
+    .register-form input {
+      padding: 0.6rem;
+      font-size: 0.9rem;
+    }
+
+    .register-form button {
+      padding: 0.6rem;
+      font-size: 1rem;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .register-container {
+      padding: 10px;
+    }
+
+    .register-form {
+      padding: 1rem;
+    }
+
+    .register-form h2 {
+      font-size: 1.5rem;
+    }
+
+    .register-form input {
+      padding: 0.5rem;
+      font-size: 0.85rem;
+    }
+
+    .register-form button {
+      padding: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .register-form .message,
+    .register-form .register-link {
+      font-size: 0.8rem;
+    }
+  }

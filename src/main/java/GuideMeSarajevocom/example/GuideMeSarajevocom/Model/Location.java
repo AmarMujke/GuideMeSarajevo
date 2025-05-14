@@ -1,7 +1,13 @@
 package GuideMeSarajevocom.example.GuideMeSarajevocom.Model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.List;
+
+@Getter
+@Setter
 @Entity
 @Table(name = "locations")
 public class Location {
@@ -19,43 +25,13 @@ public class Location {
 
     private Double longitude;
 
-    public Long getLocationId() {
-        return locationId;
-    }
+    private String imageUrl;
 
-    public void setLocationId(Long locationId) {
-        this.locationId = locationId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
+    @ManyToMany
+    @JoinTable(
+            name = "location_categories",
+            joinColumns = @JoinColumn(name = "location_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private List<Category> categories;
 }

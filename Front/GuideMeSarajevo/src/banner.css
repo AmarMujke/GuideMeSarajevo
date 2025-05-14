@@ -5,9 +5,12 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
-  padding: 40px;
+  padding: 20px;
   text-align: center;
   height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #txtBack {
@@ -15,9 +18,9 @@
   background-color: #67561ed9;
   border-radius: 25px;
   padding: 5vh;
-  margin-top: 5%;
-  margin-right: 18%;
-  margin-left: 18%;
+  margin: 0 18%;
+  width: auto;
+  max-width: 800px;
 }
 
 /* CSS */
@@ -89,17 +92,19 @@
 .banner h2 {
   font-size: 25px;
   text-align: center;
+  margin: 0;
 }
 
 .banner h1 {
   font-size: 50px;
   text-align: center;
-  margin: 0;
+  margin: 10px 0;
 }
 
 .banner p {
   font-size: 28px;
   color: white;
+  margin: 0;
 }
 
 #naruciBtn {
@@ -110,4 +115,56 @@
   margin-top: 3vh;
   padding: 2vh;
   font-size: 20px;
+}
+
+@media screen and (max-width: 768px) {
+  .banner {
+    height: 40vh;
+    padding: 10px;
+  }
+
+  #txtBack {
+    margin: 0 5%;
+    padding: 3vh;
+  }
+
+  .banner h2 {
+    font-size: 20px;
+  }
+
+  .banner h1 {
+    font-size: 32px;
+  }
+
+  .banner p {
+    font-size: 18px;
+  }
+
+  .button-53 {
+    font-size: 0.9rem;
+    padding: 0.6rem 1.2rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .banner {
+    height: 35vh;
+  }
+
+  #txtBack {
+    margin: 0 3%;
+    padding: 2vh;
+  }
+
+  .banner h2 {
+    font-size: 18px;
+  }
+
+  .banner h1 {
+    font-size: 24px;
+  }
+
+  .banner p {
+    font-size: 16px;
+  }
 }

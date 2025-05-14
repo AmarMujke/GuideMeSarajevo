@@ -1,0 +1,65 @@
+# ============================
+# Java / Spring Boot
+# ============================
+/target/
+/out/
+/build/
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/
+**/logs/
+*.log
+*.class
+*.jar
+*.war
+*.ear
+*.iml
+*.db
+*.h2.db
+*.sqlite
+.DS_Store
+*.swp
+
+# Spring Boot secrets
+application.properties
+application.yml
+application-*.properties
+application-*.yml
+
+# IntelliJ / Eclipse
+.idea/
+*.iws
+*.ipr
+*.iml
+.project
+.classpath
+.settings/
+
+# ============================
+# React (frontend)
+# ============================
+/frontend/node_modules/
+/frontend/build/
+/frontend/.env.local
+/frontend/.env.development.local
+/frontend/.env.test.local
+/frontend/.env.production.local
+
+# ============================
+# General
+# ============================
+.env
+.env.*
+*.env
+*.pem
+*.key
+*.crt
+
+# macOS
+.DS_Store
+
+# Logs
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*

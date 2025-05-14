@@ -1,23 +1,16 @@
 package GuideMeSarajevocom.example.GuideMeSarajevocom.Model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "users")
-@Builder
-@AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor // Required by JPA
 public class User {
-
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +29,18 @@ public class User {
     @Column(nullable = false)
     private String role;
 
-    public User() {
+    // Optional constructor for convenience
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 
+    // Optional full constructor
+    public User(Long userId, String username, String email, String password, String role) {
+        this.userId = userId;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.role = role;
     }
 }

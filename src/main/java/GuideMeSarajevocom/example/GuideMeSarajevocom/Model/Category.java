@@ -1,8 +1,15 @@
 package GuideMeSarajevocom.example.GuideMeSarajevocom.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
 
 @Entity
+@Setter
+@Getter
 @Table(name = "categories")
 public class Category {
 
@@ -13,19 +20,7 @@ public class Category {
 
     private String name;
 
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    @ManyToMany(mappedBy = "categories")
+    @JsonIgnore
+    private List<Location> locations;
 }

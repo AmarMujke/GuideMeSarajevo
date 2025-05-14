@@ -1,0 +1,110 @@
+package GuideMeSarajevocom.example.GuideMeSarajevocom.Controller;
+
+import GuideMeSarajevocom.example.GuideMeSarajevocom.Model.Location;
+import GuideMeSarajevocom.example.GuideMeSarajevocom.Service.ImageUploadService;
+import GuideMeSarajevocom.example.GuideMeSarajevocom.Service.LocationService;
+import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/locations")
+public class LocationController {
+
+    private final LocationService locationService;
+    private final ImageUploadService imageUploadService;
+
+    public LocationController(LocationService locationService, ImageUploadService imageUploadService) {
+        this.locationService = locationService;
+        this.imageUploadService = imageUploadService;
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAllLocations() {
+        try {
+            return ResponseEntity.ok(locationService.getAllLocations());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No locations found");
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getLocationById(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(locationService.getLocationById(id));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Location not found with ID: " + id);
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<String> addLocation(@RequestBody Location location) {
+        try {
+            locationService.addLocation(location);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Location added successfully.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error while adding location: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateLocation(@PathVariable int id, @RequestBody Location location) {
+        try {
+            locationService.updateLocation(id, location);
+            return ResponseEntity.ok("Location updated successfully.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error while updating location: " + e.getMessage());
+        }
+
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteLocation(@PathVariable int id) {
+        try {
+            locationService.deleteLocation(id);
+            return ResponseEntity.ok("Location deleted successfully.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error while deleting location: " + e.getMessage());
+        }
+
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<?> getLocationsByCategory(@RequestParam int categoryId) {
+        try {
+            return ResponseEntity.ok(locationService.getLocationsByCategoryId(categoryId));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error fetching location by category: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/with-image")
+    public ResponseEntity<String> addLocationWithImage(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("name") String name,
+            @RequestParam("description") String description,
+            @RequestParam("latitude") Double latitude,
+            @RequestParam("longitude") Double longitude
+    ) {
+        try {
+            String imageUrl = imageUploadService.uploadImage(file);
+
+            Location location = new Location();
+            location.setName(name);
+            location.setDescription(description);
+            location.setLatitude(latitude);
+            location.setLongitude(longitude);
+            location.setImageUrl(imageUrl);
+
+            locationService.addLocation(location);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Location created successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        }
+    }
+}
+
