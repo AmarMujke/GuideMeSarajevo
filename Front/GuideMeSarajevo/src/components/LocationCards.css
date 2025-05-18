@@ -1,0 +1,34 @@
+.card-container {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+  
+  .location-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    overflow: hidden;
+    width: 300px;
+    text-align: center;
+    transition: transform 0.2s ease;
+  }
+  
+  .location-card:hover {
+    transform: scale(1.03);
+  }
+  
+  .location-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .location-title {
+    padding: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+  

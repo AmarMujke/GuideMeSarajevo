@@ -1,5 +1,8 @@
 package GuideMeSarajevocom.example.GuideMeSarajevocom.Service;
 
+import GuideMeSarajevocom.example.GuideMeSarajevocom.DTO.CategoryDTO;
+import GuideMeSarajevocom.example.GuideMeSarajevocom.DTO.LocationDTO;
+import GuideMeSarajevocom.example.GuideMeSarajevocom.DTO.UserDTO;
 import GuideMeSarajevocom.example.GuideMeSarajevocom.Model.Location;
 import GuideMeSarajevocom.example.GuideMeSarajevocom.Repository.LocationRepository;
 import org.springframework.stereotype.Service;
@@ -42,5 +45,34 @@ public class LocationService {
 
     public List<Location> getLocationsByCategoryId(int categoryId) {
         return locationRepository.findByCategoryId(categoryId);
+    }
+
+    public LocationDTO mapToLocationDTO(Location location) {
+        LocationDTO dto = new LocationDTO();
+        dto.setLocationId(location.getLocationId());
+        dto.setName(location.getName());
+        dto.setDescription(location.getDescription());
+        dto.setLatitude(location.getLatitude());
+        dto.setLongitude(location.getLongitude());
+        dto.setImageUrl(location.getImageUrl());
+
+        // map user
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUserId(location.getCreatedBy().getUserId());
+        userDTO.setUsername(location.getCreatedBy().getUsername());
+        userDTO.setEmail(location.getCreatedBy().getEmail());
+        dto.setCreatedBy(userDTO);
+
+        // map categories
+        List<CategoryDTO> categoryDTOs = location.getCategories().stream().map(cat -> {
+            CategoryDTO catDTO = new CategoryDTO();
+            catDTO.setCategoryId(Math.toIntExact(cat.getCategoryId()));
+            catDTO.setName(cat.getName());
+            return catDTO;
+        }).toList();
+
+        dto.setCategories(categoryDTOs);
+
+        return dto;
     }
 }

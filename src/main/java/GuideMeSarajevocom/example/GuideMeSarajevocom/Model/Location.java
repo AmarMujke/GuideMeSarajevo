@@ -27,6 +27,10 @@ public class Location {
 
     private String imageUrl;
 
+    @ManyToOne
+    @JoinColumn(name = "created_by_user_id")
+    private User createdBy;
+
     @ManyToMany
     @JoinTable(
             name = "location_categories",

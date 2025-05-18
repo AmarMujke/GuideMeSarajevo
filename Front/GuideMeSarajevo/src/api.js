@@ -17,4 +17,9 @@ api.interceptors.request.use(
   }
 );
 
+export const fetchCategories = async () => {
+  const res = await api.get("/api/categories");
+  return res.data;
+};
+
 export default api;
