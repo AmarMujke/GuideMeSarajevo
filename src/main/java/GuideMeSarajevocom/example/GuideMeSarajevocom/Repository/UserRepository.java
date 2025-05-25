@@ -1,5 +1,6 @@
 package GuideMeSarajevocom.example.GuideMeSarajevocom.Repository;
 
+import GuideMeSarajevocom.example.GuideMeSarajevocom.DTO.UserDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import GuideMeSarajevocom.example.GuideMeSarajevocom.Model.User;

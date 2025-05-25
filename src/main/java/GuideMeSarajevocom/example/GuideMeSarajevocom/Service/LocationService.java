@@ -4,13 +4,30 @@ import GuideMeSarajevocom.example.GuideMeSarajevocom.DTO.CategoryDTO;
 import GuideMeSarajevocom.example.GuideMeSarajevocom.DTO.LocationDTO;
 import GuideMeSarajevocom.example.GuideMeSarajevocom.DTO.UserDTO;
 import GuideMeSarajevocom.example.GuideMeSarajevocom.Model.Location;
+import GuideMeSarajevocom.example.GuideMeSarajevocom.Model.User;
 import GuideMeSarajevocom.example.GuideMeSarajevocom.Repository.LocationRepository;
+import GuideMeSarajevocom.example.GuideMeSarajevocom.Repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class LocationService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public void addLocation(Location location) {
+        Long userId = location.getCreatedBy().getUserId();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+
+        location.setCreatedBy(user);
+
+        locationRepository.save(location);
+    }
 
     private final LocationRepository locationRepository;
 
@@ -26,9 +43,9 @@ public class LocationService {
         return locationRepository.findById(id).orElseThrow(() -> new RuntimeException("Location not found."));
     }
 
-    public void addLocation(Location location) {
-        locationRepository.save(location);
-    }
+//    public void addLocation(Location location) {
+//        locationRepository.save(location);
+//    }
 
     public void updateLocation(int id, Location location) {
         Location existingLocation = getLocationById(id);
@@ -66,7 +83,7 @@ public class LocationService {
         // map categories
         List<CategoryDTO> categoryDTOs = location.getCategories().stream().map(cat -> {
             CategoryDTO catDTO = new CategoryDTO();
-            catDTO.setCategoryId(Math.toIntExact(cat.getCategoryId()));
+            catDTO.setCategoryId(cat.getCategoryId());
             catDTO.setName(cat.getName());
             return catDTO;
         }).toList();

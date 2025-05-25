@@ -101,4 +101,9 @@ public class UserService {
 
         return UserMapper.toUserWithLocationsDTO(user);
     }
+
+    public UserDTO getUserByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+        return UserMapper.toUserWithID(user);
+    }
 }

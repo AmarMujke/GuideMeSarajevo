@@ -17,7 +17,6 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Prefix ROLE_ jer Spring Security očekuje
         String roleName = "ROLE_" + user.getRole().toUpperCase();
         return Collections.singletonList(new SimpleGrantedAuthority(roleName));
     }

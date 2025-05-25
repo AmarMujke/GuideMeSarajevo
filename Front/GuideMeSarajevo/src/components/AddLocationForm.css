@@ -49,3 +49,9 @@
     background-color: #FFB300;
   }
   
+  select[multiple] {
+    height: 120px;
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+  }

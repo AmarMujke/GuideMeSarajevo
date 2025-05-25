@@ -1,5 +1,7 @@
 package GuideMeSarajevocom.example.GuideMeSarajevocom.Model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,6 +31,7 @@ public class Location {
 
     @ManyToOne
     @JoinColumn(name = "created_by_user_id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "userId")
     private User createdBy;
 
     @ManyToMany

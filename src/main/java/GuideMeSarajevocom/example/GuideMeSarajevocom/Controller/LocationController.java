@@ -1,6 +1,8 @@
 package GuideMeSarajevocom.example.GuideMeSarajevocom.Controller;
 
+import GuideMeSarajevocom.example.GuideMeSarajevocom.Model.FavoriteLocation;
 import GuideMeSarajevocom.example.GuideMeSarajevocom.Model.Location;
+import GuideMeSarajevocom.example.GuideMeSarajevocom.Repository.FavoriteLocationsRepository;
 import GuideMeSarajevocom.example.GuideMeSarajevocom.Service.ImageUploadService;
 import GuideMeSarajevocom.example.GuideMeSarajevocom.Service.LocationService;
 import org.springframework.http.HttpStatus;
@@ -17,10 +19,12 @@ public class LocationController {
 
     private final LocationService locationService;
     private final ImageUploadService imageUploadService;
+    private final FavoriteLocationsRepository favoriteLocationsRepository;
 
-    public LocationController(LocationService locationService, ImageUploadService imageUploadService) {
+    public LocationController(LocationService locationService, ImageUploadService imageUploadService, FavoriteLocationsRepository favoriteLocationsRepository) {
         this.locationService = locationService;
         this.imageUploadService = imageUploadService;
+        this.favoriteLocationsRepository = favoriteLocationsRepository;
     }
 
     @GetMapping
@@ -61,7 +65,6 @@ public class LocationController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error while updating location: " + e.getMessage());
         }
-
     }
 
     @DeleteMapping("/{id}")

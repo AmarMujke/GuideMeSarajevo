@@ -169,4 +169,14 @@ public class UserController {
         userService.save(user);
         return ResponseEntity.ok("Profile updated successfully.");
     }
+
+    @GetMapping("/by-email")
+    public ResponseEntity<?> getUserByEmail(@RequestParam String email) {
+        try {
+            UserDTO user = userService.getUserByEmail(email);
+            return ResponseEntity.ok(user);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with email: " + email);
+        }
+    }
 }

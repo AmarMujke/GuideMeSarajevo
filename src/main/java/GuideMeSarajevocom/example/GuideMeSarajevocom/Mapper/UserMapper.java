@@ -9,6 +9,14 @@ import java.util.stream.Collectors;
 
 public class UserMapper {
 
+    public static UserDTO toUserWithID(User user) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setEmail(user.getEmail());
+        userDTO.setUserId(user.getUserId());
+        userDTO.setUsername(user.getUsername());
+        return userDTO;
+    }
+
     public static UserWithLocationsDTO toUserWithLocationsDTO(User user) {
         UserWithLocationsDTO dto = new UserWithLocationsDTO();
         dto.setUserId(user.getUserId());
@@ -47,7 +55,7 @@ public class UserMapper {
                             .stream()
                             .map(category -> {
                                 CategoryDTO categoryDTO = new CategoryDTO();
-                                categoryDTO.setCategoryId(Math.toIntExact(category.getCategoryId()));
+                                categoryDTO.setCategoryId((category.getCategoryId()));
                                 categoryDTO.setName(category.getName());
                                 return categoryDTO;
                             })
