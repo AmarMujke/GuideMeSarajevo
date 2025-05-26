@@ -111,5 +111,14 @@ public class LocationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
     }
+
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<?> getLocationsByCategory(@PathVariable Long categoryId) {
+        try {
+            return ResponseEntity.ok(locationService.getLocationsByCategory(categoryId));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No locations found");
+        }
+    }
 }
 

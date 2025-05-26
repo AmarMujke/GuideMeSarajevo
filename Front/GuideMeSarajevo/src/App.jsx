@@ -4,6 +4,7 @@ import Home from "./home";
 import Register from "./Register"
 import Login from "./Login";
 import Profile from "./components/Profile";
+import LocationDetails from "./LocationDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
 import "./App.css";
 
@@ -22,6 +23,7 @@ function App() {
             </ProtectedRoute>
           } />
           <Route path="/" element={<Home />} />
+          <Route path="/location/:id" element={<LocationDetails />} />
         </Routes>
       </Router>
     </AuthProvider>

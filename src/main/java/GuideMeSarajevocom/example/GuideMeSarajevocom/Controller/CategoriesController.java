@@ -24,5 +24,4 @@ public class CategoriesController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No categories found");
         }
     }
-
 }

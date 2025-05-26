@@ -25,6 +25,8 @@ application.yml
 application-*.properties
 application-*.yml
 
+src/main/resources/application.properties
+
 # IntelliJ / Eclipse
 .idea/
 *.iws

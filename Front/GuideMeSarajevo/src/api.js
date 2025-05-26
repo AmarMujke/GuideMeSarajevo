@@ -22,4 +22,9 @@ export const fetchCategories = async () => {
   return res.data;
 };
 
+export const fetchLocationsByCategory = async (categoryId) => {
+  const res = await api.get(`/api/locations/category/${categoryId}`);
+  return res.data;
+};
+
 export default api;

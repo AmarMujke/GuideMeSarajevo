@@ -1,6 +1,5 @@
 package GuideMeSarajevocom.example.GuideMeSarajevocom.Service;
 
-import GuideMeSarajevocom.example.GuideMeSarajevocom.DTO.LocationDTO;
 import GuideMeSarajevocom.example.GuideMeSarajevocom.DTO.RegisterRequestDTO;
 import GuideMeSarajevocom.example.GuideMeSarajevocom.DTO.UserDTO;
 import GuideMeSarajevocom.example.GuideMeSarajevocom.DTO.UserWithLocationsDTO;
@@ -39,6 +38,7 @@ public class UserService {
         User newUser = new User();
         newUser.setUsername(request.getUsername());
         newUser.setEmail(request.getEmail());
+        newUser.setRole(request.getRole());
         newUser.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepository.save(newUser);
     }

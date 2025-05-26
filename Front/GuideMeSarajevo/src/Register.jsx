@@ -6,12 +6,16 @@ import "./Register.css";
 
 const Register = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ username: "", email: "", password: "", role: "USER" });
+  const [formData, setFormData] = useState({ username: "", email: "", password: "", role: "" });
   const [message, setMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      if (!formData.role) {
+        setMessage("Please select account type (Traveller or Company).");
+        return;
+      }
       await api.post("/api/auth/register", formData);
       navigate('/login');
     } catch (error) {
@@ -43,6 +47,26 @@ const Register = () => {
             value={formData.password}
             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
           />
+          <div className="role-toggle">
+          <p>Select Account Type <span style={{ color: 'red' }}>*</span></p>
+          <div className="toggle-options">
+            <button
+              type="button"
+              className={formData.role === "USER" ? "toggle-btn active" : "toggle-btn"}
+              onClick={() => setFormData({ ...formData, role: "USER" })}
+            >
+              👤 Traveller
+            </button>
+            <button
+              type="button"
+              className={formData.role === "ADMIN" ? "toggle-btn active" : "toggle-btn"}
+              onClick={() => setFormData({ ...formData, role: "ADMIN" })}
+            >
+              🏢 Company
+            </button>
+          </div>
+        </div>
+
           <button type="submit">Register</button>
           {message && (
             <p className="message error">{message}</p>

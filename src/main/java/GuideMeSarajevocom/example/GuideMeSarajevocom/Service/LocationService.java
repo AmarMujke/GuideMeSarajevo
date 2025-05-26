@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LocationService {
@@ -92,4 +93,10 @@ public class LocationService {
 
         return dto;
     }
+
+    public List<LocationDTO> getLocationsByCategory(Long categoryId) {
+        List<Location> locations = locationRepository.findByCategoryId(Math.toIntExact(categoryId));
+        return locations.stream().map(LocationDTO::new).collect(Collectors.toList());
+    }
+
 }
