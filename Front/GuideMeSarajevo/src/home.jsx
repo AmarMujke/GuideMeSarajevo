@@ -4,6 +4,7 @@ import Footer from "./footer";
 import LocationCards from "./components/LocationCards";
 import Map from "./map"
 import CategoryFilter from "./components/CategoryFilter";
+import PopularSection from "./components/PopularSection";
 
 function home() {
   return (
@@ -11,6 +12,7 @@ function home() {
       <Nav />
       <Banner />
       <div>
+      <PopularSection />
       <h1>Featured Locations</h1>
         <LocationCards />
       </div>

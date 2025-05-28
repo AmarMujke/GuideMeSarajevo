@@ -82,7 +82,7 @@ function Map() {
         />
       </div>
       <div className="google-map">
-        <LoadScript googleMapsApiKey="AIzaSyCc7ev7o8HXbTDHvsPj6gUQ7CBwjMfMUMw">
+        <LoadScript googleMapsApiKey="">
           <GoogleMap
             mapContainerStyle={{ width: "100%", height: "100%" }}
             center={mapCenter}

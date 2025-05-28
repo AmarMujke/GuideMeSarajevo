@@ -70,7 +70,7 @@ public class UserController {
         }
 
         String token = jwtService.generateToken(email);
-        return ResponseEntity.ok(new LoginResponse(token, email));
+        return ResponseEntity.ok(new LoginResponse(token, email, user.getUserId()));
     }
 
     @GetMapping("/validate")

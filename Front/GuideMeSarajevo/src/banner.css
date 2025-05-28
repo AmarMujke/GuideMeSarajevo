@@ -1,13 +1,12 @@
 .banner {
   /* background: url("../../banner4.jpeg"); */
   background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
-    url("./assets/banner.jpeg");
+    url("./assets/SarajevoBanner.jpeg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
-  padding: 20px;
   text-align: center;
-  height: 50vh;
+  height: 70vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,7 +14,7 @@
 
 #txtBack {
   color: white;
-  background-color: #67561ed9;
+  background-color: #00000058;
   border-radius: 25px;
   padding: 5vh;
   margin: 0 18%;
@@ -25,61 +24,20 @@
 
 /* CSS */
 .button-53 {
-  background-color: #eba833;
-  border: 0 solid #e5e7eb;
-  box-sizing: border-box;
-  color: #000000;
-  margin-top: 3vh;
-  font-family:
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    system-ui,
-    "Segoe UI",
-    Roboto,
-    "Helvetica Neue",
-    Arial,
-    "Noto Sans",
-    sans-serif,
-    "Apple Color Emoji",
-    "Segoe UI Emoji",
-    "Segoe UI Symbol",
-    "Noto Color Emoji";
-  font-size: 1rem;
-  font-weight: 700;
-  justify-content: center;
-  line-height: 1.75rem;
-  padding: 0.75rem 1.65rem;
-  position: relative;
-  text-align: center;
-  text-decoration: none #000000 solid;
-  text-decoration-thickness: auto;
-  width: 100%;
-  max-width: 460px;
+  display: block;
+  width: 50%;
+  max-width: 100%;
+  padding: 0.75rem;
+  margin: 1rem auto 0;
+  background-color: #FFC107;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
   cursor: pointer;
-  transform: rotate(-2deg);
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-}
-
-.button-53:focus {
-  outline: 0;
-}
-
-.button-53:after {
-  content: "";
-  position: absolute;
-  border: 1px solid #000000;
-  bottom: 4px;
-  left: 4px;
-  width: calc(100% - 1px);
-  height: calc(100% - 1px);
-}
-
-.button-53:hover:after {
-  bottom: 2px;
-  left: 2px;
+  transition: background-color 0.3s ease;
+  box-sizing: border-box;
 }
 
 @media (min-width: 768px) {
@@ -107,15 +65,6 @@
   margin: 0;
 }
 
-#naruciBtn {
-  border: none;
-  background-color: #eba833;
-  color: white;
-  border-radius: 20px;
-  margin-top: 3vh;
-  padding: 2vh;
-  font-size: 20px;
-}
 
 @media screen and (max-width: 768px) {
   .banner {

@@ -55,3 +55,36 @@
   background: white;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
+
+@media screen and (max-width: 768px) {
+  .map-container {
+    height: 50vh;
+    padding: 1rem;
+  }
+
+  .search-bar {
+    width: auto;
+    top: 10px;
+    left: 45%;
+  }
+
+  .search-bar input {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+
+  .category-dropdown {
+    width: 95%;
+    top: 60px;
+  }
+
+  .category-dropdown select {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .google-map {
+    border-radius: 12px;
+  }
+}
+

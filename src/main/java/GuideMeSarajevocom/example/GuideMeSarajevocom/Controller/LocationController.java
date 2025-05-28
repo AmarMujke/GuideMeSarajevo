@@ -5,6 +5,7 @@ import GuideMeSarajevocom.example.GuideMeSarajevocom.Model.Location;
 import GuideMeSarajevocom.example.GuideMeSarajevocom.Repository.FavoriteLocationsRepository;
 import GuideMeSarajevocom.example.GuideMeSarajevocom.Service.ImageUploadService;
 import GuideMeSarajevocom.example.GuideMeSarajevocom.Service.LocationService;
+import jakarta.annotation.security.PermitAll;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -114,6 +115,15 @@ public class LocationController {
 
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<?> getLocationsByCategory(@PathVariable Long categoryId) {
+        try {
+            return ResponseEntity.ok(locationService.getLocationsByCategory(categoryId));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No locations found");
+        }
+    }
+
+    @GetMapping("/public/category/{categoryId}")
+    public ResponseEntity<?> getPublicLocationsByCategory(@PathVariable Long categoryId) {
         try {
             return ResponseEntity.ok(locationService.getLocationsByCategory(categoryId));
         } catch (RuntimeException e) {

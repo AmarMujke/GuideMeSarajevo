@@ -6,6 +6,8 @@ import Login from "./Login";
 import Profile from "./components/Profile";
 import LocationDetails from "./LocationDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Transport from "./Transport";
+import Tours from "./Tours";
 import "./App.css";
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
           } />
           <Route path="/" element={<Home />} />
           <Route path="/location/:id" element={<LocationDetails />} />
+          <Route path="/transport" element={<Transport />} />
+          <Route path="/tours" element={<Tours />}/>
         </Routes>
       </Router>
     </AuthProvider>

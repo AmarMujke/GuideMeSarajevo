@@ -33,13 +33,10 @@ function Nav() {
       <nav>
         <ul className={isNavOpen ? "navList show" : "navList"}>
           <li>
-            <Link to="/">Home</Link>
+            <Link to="/tours">Tours</Link>
           </li>
           <li>
-            <Link to="/routes">Routes</Link>
-          </li>
-          <li>
-            <Link to="/contact">Contact</Link>
+            <Link to="/transport">Transport</Link>
           </li>
           <li>
             {isLoggedIn ? (

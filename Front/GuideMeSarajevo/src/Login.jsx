@@ -8,7 +8,7 @@ import "./Login.css";
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({ email: "", password: "", userId: "" });
   const [message, setMessage] = useState("");
 
   const handleSubmit = async (e) => {
@@ -17,17 +17,25 @@ const Login = () => {
       console.log('Attempting login with:', formData);
       const response = await api.post("/api/auth/login", formData);
       console.log('Login response:', response.data);
-      login(response.data); 
+  
+      login(response.data);
+  
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("email", response.data.email);
+      localStorage.setItem("userId", response.data.userId); 
+  
       console.log('After login - localStorage:', {
         token: localStorage.getItem('token'),
-        email: localStorage.getItem('email')
+        email: localStorage.getItem('email'),
+        userId: localStorage.getItem('userId')
       });
+  
       navigate('/');
     } catch (error) {
       console.error('Login error:', error);
       setMessage(error.response?.data || "An error occurred");
     }
-  };
+  };  
 
   return (
     <>

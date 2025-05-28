@@ -1,0 +1,92 @@
+.tours-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+  
+  .tours-title {
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #333;
+  }
+  
+  .routes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+  }
+  
+  .route-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .route-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  }
+  
+  .route-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+  }
+  
+  .route-info {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+  
+  .route-info h3 {
+    margin: 0 0 10px;
+    font-size: 20px;
+    color: #222;
+  }
+  
+  .route-info p {
+    margin: 6px 0;
+    color: #555;
+    font-size: 14px;
+  }
+  
+  .itinerary {
+    font-style: italic;
+    color: #666;
+  }
+  
+  .route-price {
+    font-weight: bold;
+    color: #2c7a7b;
+    margin-top: auto;
+  }
+  
+  .like-button {
+    margin-top: 12px;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background-color: #eee;
+    color: #333;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .like-button:hover {
+    background-color: #ccc;
+  }
+  
+  .like-button.liked {
+    background-color: #ff69b4;
+    color: #fff;
+  }
+  
