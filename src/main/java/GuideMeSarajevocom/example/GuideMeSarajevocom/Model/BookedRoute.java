@@ -1,22 +1,23 @@
 package GuideMeSarajevocom.example.GuideMeSarajevocom.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.Data;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "booked_routes")
+@Data
 @IdClass(BookedRouteId.class)
 public class BookedRoute {
+
     @Id
     private Integer userId;
 
     @Id
     private Integer routeId;
 
-    private Timestamp bookedAt;
+    private LocalDateTime bookedAt;
 }
 

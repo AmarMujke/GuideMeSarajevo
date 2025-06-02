@@ -1,6 +1,5 @@
 .popular-section {
-    padding: 40px 20px;
-    background-color: #fef9e7;
+    padding: 40px 60px;
     font-family: 'Segoe UI', sans-serif;
   }
   
@@ -49,8 +48,9 @@
   
   .location-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(3, minmax(280px, 1fr));
     gap: 20px;
+    padding: 0vh 10vh 0vh 10vh;
   }
   
   .location-card {

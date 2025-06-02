@@ -3,8 +3,8 @@ import Nav from "./nav";
 import Footer from "./footer";
 import LocationCards from "./components/LocationCards";
 import Map from "./map"
-import CategoryFilter from "./components/CategoryFilter";
 import PopularSection from "./components/PopularSection";
+import CategoryFilter from "./components/CategoryFilter";
 
 function home() {
   return (
@@ -13,10 +13,10 @@ function home() {
       <Banner />
       <div>
       <PopularSection />
-      <h1>Featured Locations</h1>
+      <Map />
+      <h1  style={{marginTop: '8rem', textAlign: 'center'}}>Featured Locations</h1>
         <LocationCards />
       </div>
-      <Map />
       <CategoryFilter />
       <Footer />
     </>

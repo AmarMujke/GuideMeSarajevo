@@ -9,9 +9,16 @@ const PopularSection = () => {
   useEffect(() => {
     fetch("http://localhost:8080/api/categories")
       .then((res) => res.json())
-      .then((data) => setCategories(data))
+      .then((data) => {
+        setCategories(data);
+        if (data.length > 0) {
+          setSelectedCategoryId(data[0].categoryId);
+          handleCategoryClick(data[0].categoryId);
+        }
+      })
       .catch((err) => console.error("Error fetching categories:", err));
   }, []);
+  
 
   const handleCategoryClick = (id) => {
     setSelectedCategoryId(id);

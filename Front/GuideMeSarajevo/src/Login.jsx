@@ -4,6 +4,7 @@ import { useAuth } from "./context/AuthContext";
 import Nav from "./nav";
 import api from "./api"; 
 import "./Login.css";
+import Footer from "./footer";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -62,6 +63,7 @@ const Login = () => {
           </p>
         </form>
       </div>
+      <Footer />
     </>
   );
 };

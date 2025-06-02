@@ -32,7 +32,7 @@ function CategoryFilter() {
 
   return (
     <div className="category-filter">
-      <h3>Filter by Category</h3>
+      <h3>Filter Locations by Category</h3>
       <select
         value={selectedCategory}
         onChange={(e) => setSelectedCategory(e.target.value)}

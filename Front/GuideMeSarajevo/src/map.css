@@ -2,39 +2,34 @@
   width: 100%;
   height: 60vh;
   position: relative;
-  padding: 3rem;
+  padding: 0rem 3rem;
   box-sizing: border-box;
 }
 
-.search-bar {
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
-  width: 90%;
-  max-width: 450px;
+/* HEADER */
+.map-header {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-.search-bar input {
-  width: 100%;
-  padding: 12px 18px;
-  border: 1.5px solid #ff9800;
-  border-radius: 25px;
-  font-size: 15px;
-  outline: none;
-  background-color: white;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+.map-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 8px;
+  text-align: center;
 }
 
-.google-map {
-  width: 100%;
-  height: 100%;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+.map-subtitle {
+  font-size: 16px;
+  color: #7f8c8d;
+  max-width: 650px;
+  margin: 0 auto;
+  line-height: 1.5;
+  padding-bottom: 2rem;
 }
 
+/* CATEGORY DROPDOWN */
 .category-dropdown {
   position: absolute;
   top: 70px;
@@ -52,10 +47,51 @@
   border-radius: 25px;
   border: 1.5px solid #ffa726;
   outline: none;
-  background: white;
+  background-color: #fff;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* GOOGLE MAP */
+.google-map {
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.search-bar {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  width: calc(100% - 3rem);
+  max-width: 600px;
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.75);
+  border-radius: 30px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 12px 20px;
+  border: none;
+  font-size: 15px;
+  border-radius: 30px;
+  background-color: transparent;
+  outline: none;
+  color: #333;
+}
+
+
+/* RESPONSIVE */
 @media screen and (max-width: 768px) {
   .map-container {
     height: 50vh;
@@ -63,9 +99,8 @@
   }
 
   .search-bar {
-    width: auto;
     top: 10px;
-    left: 45%;
+    width: 90%;
   }
 
   .search-bar input {
@@ -74,8 +109,8 @@
   }
 
   .category-dropdown {
-    width: 95%;
     top: 60px;
+    width: 90%;
   }
 
   .category-dropdown select {
@@ -86,5 +121,13 @@
   .google-map {
     border-radius: 12px;
   }
-}
 
+  .map-title {
+    font-size: 22px;
+  }
+
+  .map-subtitle {
+    font-size: 14px;
+    padding: 0 10px;
+  }
+}

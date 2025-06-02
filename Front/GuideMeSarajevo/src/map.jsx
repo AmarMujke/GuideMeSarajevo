@@ -59,29 +59,22 @@ function Map() {
 
   return (
     <div className="map-container">
-   {/* <div className="category-dropdown">
-  <select
-    value={selectedCategory}
-    onChange={(e) => setSelectedCategory(e.target.value)}
-  >
-    <option value="">All Categories</option>
-    {categories.map((cat) => (
-      <option key={cat.categoryId} value={cat.categoryId}>
-        {cat.name}
-      </option>
-    ))}
-  </select>
-</div> */}
 
-      <div className="search-bar">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search for a location"
-        />
-      </div>
-      <div className="google-map">
+    <h2 className="map-title">Discover Sarajevo</h2>
+    <p className="map-subtitle">
+      Use the interactive map to explore popular locations, cultural spots, and hidden gems around the city.
+    </p>
+
+    <div className="google-map">
+    <div className="search-bar">
+      <input
+        type="text"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        placeholder="Search for a location"
+      />
+    </div>
+
         <LoadScript googleMapsApiKey="">
           <GoogleMap
             mapContainerStyle={{ width: "100%", height: "100%" }}
