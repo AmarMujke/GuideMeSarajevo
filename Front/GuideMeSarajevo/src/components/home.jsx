@@ -1,10 +1,10 @@
 import Banner from "./banner";
 import Nav from "./nav";
 import Footer from "./footer";
-import LocationCards from "./components/LocationCards";
+import LocationCards from "./LocationCards";
 import Map from "./map"
-import PopularSection from "./components/PopularSection";
-import CategoryFilter from "./components/CategoryFilter";
+import PopularSection from "./PopularSection";
+import CategoryFilter from "./CategoryFilter";
 
 function home() {
   return (

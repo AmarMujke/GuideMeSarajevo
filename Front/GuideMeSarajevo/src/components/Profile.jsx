@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import Nav from "../nav";
-import Footer from "../footer";
+import Nav from "./nav";
+import Footer from "./footer";
 import AddLocationForm from "./AddLocationForm";
 import EditLocationForm from "./EditLocationForm";
 import "./Profile.css";
-import parseJwt from "../parseJwt";
+import parseJwt from "../helpers/parseJwt";
 
 const Profile = () => {
   const { user } = useAuth();

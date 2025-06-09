@@ -1,13 +1,13 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom"; // Note: Use Routes instead of Route here
 import { AuthProvider } from "./context/AuthContext";
-import Home from "./home";
-import Register from "./Register"
-import Login from "./Login";
+import Home from "./components/home";
+import Register from "./components/Register"
+import Login from "./components/Login";
 import Profile from "./components/Profile";
-import LocationDetails from "./LocationDetails";
+import LocationDetails from "./components/LocationDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Transport from "./Transport";
-import Tours from "./Tours";
+import Transport from "./components/Transport";
+import Tours from "./components/Tours";
 import "./App.css";
 
 function App() {

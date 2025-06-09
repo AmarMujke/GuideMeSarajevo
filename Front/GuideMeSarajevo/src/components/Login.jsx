@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "./context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import Nav from "./nav";
-import api from "./api"; 
+import api from "../helpers/api"; 
 import "./Login.css";
 import Footer from "./footer";
 

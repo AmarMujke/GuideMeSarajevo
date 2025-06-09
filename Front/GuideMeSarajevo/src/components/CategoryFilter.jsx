@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchCategories, fetchLocationsByCategory } from "../api.js";
+import { fetchCategories, fetchLocationsByCategory } from "../helpers/api.js";
 import "./CategoryFilter.css";
 
 function CategoryFilter() {

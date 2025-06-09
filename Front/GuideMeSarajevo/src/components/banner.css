@@ -1,7 +1,7 @@
 .banner {
   /* background: url("../../banner4.jpeg"); */
   background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
-    url("./assets/SarajevoBanner.jpeg");
+    url("../assets/SarajevoBanner.jpeg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
