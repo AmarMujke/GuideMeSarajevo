@@ -26,6 +26,7 @@ application-*.properties
 application-*.yml
 
 src/main/resources/application.properties
+.env
 
 # IntelliJ / Eclipse
 .idea/

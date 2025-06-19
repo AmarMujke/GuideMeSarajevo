@@ -80,7 +80,7 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Missing or invalid Authorization header.");
             }
 
-            String token = authHeader.substring(7); // Remove "Bearer "
+            String token = authHeader.substring(7);
 
             boolean isValid = jwtService.validateToken(token);
 
@@ -154,7 +154,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
 
-        // Update only non-null fields
         if (request.getUsername() != null) {
             user.setUsername(request.getUsername());
         }

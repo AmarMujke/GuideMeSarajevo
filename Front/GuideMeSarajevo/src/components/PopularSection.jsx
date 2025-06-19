@@ -1,24 +1,37 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import "./PopularSection.css";
 
 const PopularSection = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [locations, setLocations] = useState([]);
+  const scrollRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch("http://localhost:8080/api/categories")
       .then((res) => res.json())
       .then((data) => {
-        setCategories(data);
-        if (data.length > 0) {
-          setSelectedCategoryId(data[0].categoryId);
-          handleCategoryClick(data[0].categoryId);
-        }
+        // Fetch locations for only non-empty categories
+        const fetchValidCategories = async () => {
+          const validCategories = [];
+          for (let cat of data) {
+            const res = await fetch(`http://localhost:8080/api/locations/public/category/${cat.categoryId}`);
+            const locs = await res.json();
+            const hasImages = locs.some((l) => l.imageUrl !== null);
+            if (hasImages) validCategories.push(cat);
+          }
+          setCategories(validCategories);
+          if (validCategories.length > 0) {
+            setSelectedCategoryId(validCategories[0].categoryId);
+            handleCategoryClick(validCategories[0].categoryId);
+          }
+        };
+        fetchValidCategories();
       })
       .catch((err) => console.error("Error fetching categories:", err));
   }, []);
-  
 
   const handleCategoryClick = (id) => {
     setSelectedCategoryId(id);
@@ -34,6 +47,14 @@ const PopularSection = () => {
       });
   };
 
+  const scroll = (direction) => {
+    if (!scrollRef.current) return;
+    scrollRef.current.scrollBy({
+      left: direction === "left" ? -200 : 200,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <div className="popular-section">
       <h2 className="section-title">Popular Sites</h2>
@@ -41,21 +62,25 @@ const PopularSection = () => {
         Explore popular sites around the city! Use one of the suggested options and feel the spirit of Sarajevo.
       </p>
 
-      <div className="category-scroll">
-        {categories.map((category) => (
-          <button
-            key={category.categoryId}
-            className={`category-btn ${selectedCategoryId === category.categoryId ? "active" : ""}`}
-            onClick={() => handleCategoryClick(category.categoryId)}
-          >
-            {category.name}
-          </button>
-        ))}
+      <div className="category-wrapper">
+        <button className="scroll-btn left" onClick={() => scroll("left")}>&lt;</button>
+        <div className="category-scroll" ref={scrollRef}>
+          {categories.slice(0, 5).map((category) => (
+            <button
+              key={category.categoryId}
+              className={`category-btn ${selectedCategoryId === category.categoryId ? "active" : ""}`}
+              onClick={() => handleCategoryClick(category.categoryId)}
+            >
+              {category.name}
+            </button>
+          ))}
+        </div>
+        <button className="scroll-btn right" onClick={() => scroll("right")}>&gt;</button>
       </div>
 
       <div className="location-grid">
         {locations.map((loc) => (
-          <div className="location-card" key={loc.locationId}>
+          <div className="location-card" key={loc.locationId} onClick={() => navigate(`/location/${loc.locationId}`)}>
             <img src={loc.imageUrl} alt={loc.name} className="location-img" />
             <div className="location-details">
               <h3>{loc.name}</h3>

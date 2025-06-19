@@ -87,6 +87,14 @@ html {
   border-radius: 8px;
 }
 
+.location-item button {
+  padding: 7px;
+  border-radius: 10px;
+  color: white;
+  background-color: #dc3545;
+  border: none;
+}
+
 .profile-wrapper {
   display: flex;
   justify-content: center;

@@ -1,7 +1,7 @@
-import { useState } from "react";
-import "./AddLocationForm.css";
-import { useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import Select from "react-select";
+import "./AddLocationForm.css";
 
 function AddLocationForm({ userId }) {
   const [categories, setCategories] = useState([]);
@@ -13,6 +13,10 @@ function AddLocationForm({ userId }) {
     latitude: "",
     longitude: "",
     file: null,
+  });
+
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
   });
 
   useEffect(() => {
@@ -44,14 +48,13 @@ function AddLocationForm({ userId }) {
     }
 
     if (formData.file) {
-      // Image upload path
       const data = new FormData();
       data.append("file", formData.file);
       data.append("name", formData.name);
       data.append("description", formData.description);
       data.append("latitude", formData.latitude);
       data.append("longitude", formData.longitude);
-      data.append("createdBy", userId); // 👈 send user ID
+      data.append("createdBy", userId);
 
       await fetch("http://localhost:8080/api/locations/with-image", {
         method: "POST",
@@ -59,7 +62,6 @@ function AddLocationForm({ userId }) {
       });
       window.location.reload();
     } else {
-      // JSON-only path
       const jsonData = {
         name: formData.name,
         description: formData.description,
@@ -79,7 +81,6 @@ function AddLocationForm({ userId }) {
       window.location.reload();
     }
 
-    // Optional: reset form
     setFormData({
       name: "",
       description: "",
@@ -87,7 +88,18 @@ function AddLocationForm({ userId }) {
       longitude: "",
       file: null,
     });
+    setSelectedCategoryIds([]);
   };
+
+  const handleMapClick = useCallback((event) => {
+    const lat = event.latLng.lat();
+    const lng = event.latLng.lng();
+    setFormData((prev) => ({
+      ...prev,
+      latitude: lat,
+      longitude: lng,
+    }));
+  }, []);
 
   return (
     <div className="form-container">
@@ -117,6 +129,7 @@ function AddLocationForm({ userId }) {
           value={formData.longitude}
           onChange={handleChange}
         />
+
         <div className="categories">
           <label htmlFor="categorySelect">Categories:</label>
           <Select
@@ -132,11 +145,34 @@ function AddLocationForm({ userId }) {
             }}
           />
         </div>
-        <small>Hold Ctrl (Cmd on Mac) to select multiple</small>
 
         <input type="file" name="file" onChange={handleChange} />
         <button type="submit">Add Location</button>
       </form>
+
+      <hr />
+
+      <h3>Click on Map to Set Location</h3>
+      {isLoaded && (
+        <GoogleMap
+          center={{
+            lat: parseFloat(formData.latitude) || 43.8563, // Sarajevo default
+            lng: parseFloat(formData.longitude) || 18.4131,
+          }}
+          zoom={13}
+          mapContainerStyle={{ width: "100%", height: "400px", marginTop: "1rem" }}
+          onClick={handleMapClick}
+        >
+          {formData.latitude && formData.longitude && (
+            <Marker
+              position={{
+                lat: parseFloat(formData.latitude),
+                lng: parseFloat(formData.longitude),
+              }}
+            />
+          )}
+        </GoogleMap>
+      )}
     </div>
   );
 }

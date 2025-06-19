@@ -75,7 +75,7 @@ function Map() {
       />
     </div>
 
-        <LoadScript googleMapsApiKey="">
+    <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
           <GoogleMap
             mapContainerStyle={{ width: "100%", height: "100%" }}
             center={mapCenter}
