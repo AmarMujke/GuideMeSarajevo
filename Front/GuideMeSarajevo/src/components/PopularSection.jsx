@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext"; 
 import "./PopularSection.css";
 
 const PopularSection = () => {
@@ -8,12 +9,12 @@ const PopularSection = () => {
   const [locations, setLocations] = useState([]);
   const scrollRef = useRef(null);
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth(); 
 
   useEffect(() => {
     fetch("http://localhost:8080/api/categories")
       .then((res) => res.json())
       .then((data) => {
-        // Fetch locations for only non-empty categories
         const fetchValidCategories = async () => {
           const validCategories = [];
           for (let cat of data) {
@@ -38,8 +39,7 @@ const PopularSection = () => {
     fetch(`http://localhost:8080/api/locations/public/category/${id}`)
       .then((res) => res.json())
       .then((data) => {
-        const withImages = data.filter((loc) => loc.imageUrl !== null);
-        setLocations(withImages);
+        setLocations(data);
       })
       .catch((err) => {
         console.error("Error fetching locations:", err);
@@ -55,6 +55,14 @@ const PopularSection = () => {
     });
   };
 
+  const handleCardClick = (locationId) => {
+    if (isLoggedIn) {
+      navigate(`/location/${locationId}`);
+    } else {
+      navigate("/register");
+    }
+  };
+
   return (
     <div className="popular-section">
       <h2 className="section-title">Popular Sites</h2>
@@ -65,7 +73,7 @@ const PopularSection = () => {
       <div className="category-wrapper">
         <button className="scroll-btn left" onClick={() => scroll("left")}>&lt;</button>
         <div className="category-scroll" ref={scrollRef}>
-          {categories.slice(0, 5).map((category) => (
+          {categories.slice(1, 6).map((category) => (
             <button
               key={category.categoryId}
               className={`category-btn ${selectedCategoryId === category.categoryId ? "active" : ""}`}
@@ -80,7 +88,11 @@ const PopularSection = () => {
 
       <div className="location-grid">
         {locations.map((loc) => (
-          <div className="location-card" key={loc.locationId} onClick={() => navigate(`/location/${loc.locationId}`)}>
+          <div
+            className="location-card"
+            key={loc.locationId}
+            onClick={() => handleCardClick(loc.locationId)} 
+          >
             <img src={loc.imageUrl} alt={loc.name} className="location-img" />
             <div className="location-details">
               <h3>{loc.name}</h3>

@@ -9,10 +9,10 @@ function Nav() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('Current login state:', isLoggedIn);
-    console.log('Local Storage:', {
-      token: localStorage.getItem('token'),
-      email: localStorage.getItem('email')
+    console.log("Current login state:", isLoggedIn);
+    console.log("Local Storage:", {
+      token: localStorage.getItem("token"),
+      email: localStorage.getItem("email"),
     });
   }, [isLoggedIn]);
 
@@ -22,7 +22,7 @@ function Nav() {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate("/login");
   };
 
   return (
@@ -32,12 +32,12 @@ function Nav() {
       </Link>
       <nav>
         <ul className={isNavOpen ? "navList show" : "navList"}>
-          <li>
-            <Link to="/tours">Tours</Link>
-          </li>
-          <li>
-            <Link to="/transport">Transport</Link>
-          </li>
+        <li>
+  <Link to={isLoggedIn ? "/tours" : "/register"}>Tours</Link>
+</li>
+<li>
+  <Link to={isLoggedIn ? "/transport" : "/register"}>Transport</Link>
+</li>
           <li>
             {isLoggedIn ? (
               <div className="profile-section">

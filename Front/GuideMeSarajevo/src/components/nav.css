@@ -5,7 +5,6 @@
   display: flex; /* Use flexbox */
   justify-content: space-between; /* Space elements evenly */
   align-items: center; /* Align items vertically */
-  position: fixed;
   width: 100%;
   z-index: 1;
   backdrop-filter: blur(5px);

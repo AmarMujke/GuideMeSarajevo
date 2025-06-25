@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Nav from "./nav";
 import api from "../helpers/api";
+import Footer from "./footer";
 import "./Register.css";
 
 const Register = () => {
@@ -74,6 +75,7 @@ const Register = () => {
           <p className="register-link">Already have an account? <Link to="/login">Login here</Link></p>
         </form>
       </div>
+      <Footer />
     </>
   );
 };

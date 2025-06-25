@@ -156,7 +156,7 @@ function AddLocationForm({ userId }) {
       {isLoaded && (
         <GoogleMap
           center={{
-            lat: parseFloat(formData.latitude) || 43.8563, // Sarajevo default
+            lat: parseFloat(formData.latitude) || 43.8563, 
             lng: parseFloat(formData.longitude) || 18.4131,
           }}
           zoom={13}

@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchCategories, fetchLocationsByCategory } from "../helpers/api.js";
+import { useAuth } from "../context/AuthContext"; 
 import "./CategoryFilter.css";
 
 function CategoryFilter() {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [locations, setLocations] = useState([]);
+  const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,7 +51,7 @@ function CategoryFilter() {
         locations.map((loc) => (
           <div key={loc.locationId} 
           className="location-card"
-          onClick={() => navigate(`/location/${loc.locationId}`)}
+          onClick={() => isLoggedIn ? navigate(`/location/${loc.locationId}`) : navigate('/register')}
           >
             {loc.imageUrl && (
               <img
