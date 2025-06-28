@@ -1,0 +1,152 @@
+/* RouteDetails.css */
+
+.route-details-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+  
+  .route-title {
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #333;
+  }
+  
+  .error {
+    color: #d32f2f;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .route-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 16px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  }
+  
+  .route-info {
+    background: #fff;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  }
+  
+  .route-description {
+    color: #555;
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .route-itinerary,
+  .route-duration,
+  .route-start,
+  .route-end {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+  
+  .route-itinerary {
+    font-style: italic;
+  }
+  
+  .route-price {
+    font-size: 16px;
+    font-weight: bold;
+    color: #2c7a7b;
+    margin-bottom: 24px;
+  }
+  
+  .route-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  
+  .book-button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    background-color: #2c7a7b;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  .book-button:hover {
+    background-color: #225e5d;
+  }
+  
+  .book-button:disabled {
+    background-color: #b0bec5;
+    cursor: not-allowed;
+  }
+  
+  .back-link {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    background-color: #666;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  .back-link:hover {
+    background-color: #555;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .route-details-container {
+      padding: 0 10px;
+    }
+  
+    .route-title {
+      font-size: 24px;
+    }
+  
+    .route-image {
+      max-height: 300px;
+    }
+  
+    .route-info {
+      padding: 16px;
+    }
+  
+    .route-description,
+    .route-price {
+      font-size: 14px;
+    }
+  
+    .route-itinerary,
+    .route-duration,
+    .route-start,
+    .route-end {
+      font-size: 12px;
+    }
+  
+    .route-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  
+    .book-button,
+    .back-link {
+      width: 100%;
+      text-align: center;
+      padding: 10px;
+      font-size: 14px;
+    }
+  }

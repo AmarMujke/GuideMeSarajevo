@@ -5,12 +5,10 @@ import Footer from "./footer";
 import AddLocationForm from "./AddLocationForm";
 import EditLocationForm from "./EditLocationForm";
 import "./Profile.css";
-import parseJwt from "../helpers/parseJwt";
 
 const Profile = () => {
   const { user } = useAuth();
   const token = localStorage.getItem("token");
-
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState(null);
   const [editUsername, setEditUsername] = useState(false);
@@ -18,6 +16,10 @@ const Profile = () => {
   const [editingId, setEditingId] = useState(null);
   const [showAdd, setShowAdd] = useState(false);
   const [userID, setUserID] = useState(null);
+  const [activeTab, setActiveTab] = useState("favorites");
+  const [bookedRoutes, setBookedRoutes] = useState([]);
+  const [bookedCars, setBookedCars] = useState([]);
+  const [likedRoutes, setLikedRoutes] = useState([]);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -28,7 +30,7 @@ const Profile = () => {
 
   useEffect(() => {
     if (!user?.email) return;
-  
+
     const fetchAll = async () => {
       try {
         const profileRes = await fetch("/api/auth/profile", {
@@ -36,59 +38,133 @@ const Profile = () => {
         });
         if (!profileRes.ok) throw new Error("Failed to fetch profile");
         const profileData = await profileRes.json();
-  
+
         const userIdRes = await fetch(
-          `http://localhost:8080/api/auth/by-email?email=${user.email}`,
+          `/api/auth/by-email?email=${user.email}`,
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` },
           }
         );
         if (!userIdRes.ok) throw new Error("Failed to fetch user ID");
         const { userId } = await userIdRes.json();
-  
-        const favoritesRes = await fetch(`/api/favorites/${userId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (!favoritesRes.ok) throw new Error("Failed to fetch favorites");
-        const favoritesData = await favoritesRes.json();
-  
-        setProfile({ ...profileData, favorites: favoritesData });
-        setFormData((f) => ({ ...f, username: profileData.username || "" }));
         setUserID(userId);
+
+        let favoritesData = [];
+        try {
+          const favoritesRes = await fetch(`/api/favorites/${userId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (favoritesRes.ok) favoritesData = await favoritesRes.json();
+        } catch (err) {
+          console.error("Failed to fetch favorites:", err.message);
+        }
+
+        let bookedRoutesData = [];
+        try {
+          const bookedRoutesRes = await fetch(`/api/routes/booked/${userId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (bookedRoutesRes.ok) bookedRoutesData = await bookedRoutesRes.json();
+        } catch (err) {
+          console.error("Failed to fetch booked routes:", err.message);
+        }
+
+        let bookedCarsData = [];
+        try {
+          const bookedCarsRes = await fetch(`/api/cars/bookings/${userId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (bookedCarsRes.ok) bookedCarsData = await bookedCarsRes.json();
+        } catch (err) {
+          console.error("Failed to fetch booked cars:", err.message);
+        }
+
+        let likedRoutesData = [];
+        try {
+          const likedRoutesRes = await fetch(`/api/liked-routes/user/${userId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (likedRoutesRes.ok) likedRoutesData = await likedRoutesRes.json();
+        } catch (err) {
+          console.error("Failed to fetch liked routes:", err.message);
+        }
+
+        setProfile({ ...profileData, favorites: favoritesData });
+        setBookedRoutes(bookedRoutesData);
+        setBookedCars(bookedCarsData);
+        setLikedRoutes(likedRoutesData);
+        setFormData((f) => ({ ...f, username: profileData.username || "" }));
       } catch (err) {
         setError(err.message);
       }
     };
-  
+
     fetchAll();
   }, [user?.email, token]);
-  
 
   const refresh = async () => {
-    const profileRes = await fetch("/api/auth/profile", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const profileData = await profileRes.json();
-  
-    const favoritesRes = await fetch(`/api/favorites/${userID}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const favoritesData = await favoritesRes.json();
-  
-    setProfile({ ...profileData, favorites: favoritesData });
+    try {
+      const profileRes = await fetch("/api/auth/profile", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const profileData = profileRes.ok ? await profileRes.json() : {};
+
+      let favoritesData = [];
+      try {
+        const favoritesRes = await fetch(`/api/favorites/${userID}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (favoritesRes.ok) favoritesData = await favoritesRes.json();
+      } catch (err) {
+        console.error("Failed to fetch favorites:", err.message);
+      }
+
+      let bookedRoutesData = [];
+      try {
+        const bookedRoutesRes = await fetch(`/api/routes/booked/${userID}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (bookedRoutesRes.ok) bookedRoutesData = await bookedRoutesRes.json();
+      } catch (err) {
+        console.error("Failed to fetch booked routes:", err.message);
+      }
+
+      let bookedCarsData = [];
+      try {
+        const bookedCarsRes = await fetch(`/api/cars/bookings/${userID}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (bookedCarsRes.ok) bookedCarsData = await bookedCarsRes.json();
+      } catch (err) {
+        console.error("Failed to fetch booked cars:", err.message);
+      }
+
+      let likedRoutesData = [];
+      try {
+        const likedRoutesRes = await fetch(`/api/liked-routes/user/${userID}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (likedRoutesRes.ok) likedRoutesData = await likedRoutesRes.json();
+      } catch (err) {
+        console.error("Failed to fetch liked routes:", err.message);
+      }
+
+      setProfile({ ...profileData, favorites: favoritesData });
+      setBookedRoutes(bookedRoutesData);
+      setBookedCars(bookedCarsData);
+      setLikedRoutes(likedRoutesData);
+    } catch (err) {
+      setError(err.message);
+    }
   };
-  
 
   const removeFavorite = async (locationId) => {
     try {
-      const res = await fetch(`/api/favorites/${locationId}`, {
+      const res = await fetch(`/api/favorites/${userID}/${locationId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error("Failed to remove favorite");
-  
       setProfile((p) => ({
         ...p,
         favorites: p.favorites.filter((fav) => fav.locationId !== locationId),
@@ -97,10 +173,62 @@ const Profile = () => {
       setError(err.message);
     }
   };
-  
+
+  const cancelBookedRoute = async (routeId) => {
+    try {
+      const res = await fetch(`/api/booked-routes/${userID}/${routeId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error("Failed to cancel booking");
+      setBookedRoutes((routes) =>
+        routes.filter((route) => route.routeId !== routeId)
+      );
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const cancelCarBooking = async (bookingId) => {
+    try {
+      const res = await fetch(`/api/cars/bookings/${bookingId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error("Failed to cancel car booking");
+      setBookedCars((bookings) =>
+        bookings.filter((booking) => booking.bookingId !== bookingId)
+      );
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const toggleLikeRoute = async (routeId) => {
+    try {
+      const res = await fetch(`/api/liked-routes/toggle`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ userId: userID, routeId }),
+      });
+      if (!res.ok) throw new Error("Failed to toggle like");
+      const result = await res.text();
+      setLikedRoutes((routes) =>
+        result === "Liked"
+          ? [...routes, { routeId, name: routes.find(r => r.routeId === routeId)?.name || "Route" }]
+          : routes.filter((route) => route.routeId !== routeId)
+      );
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   const handleUsernameUpdate = async () => {
     try {
-      const res = await fetch("/api/auth/update-username", {
+      const res = await fetch("/api/auth/update-profile", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -163,39 +291,22 @@ const Profile = () => {
   };
 
   const isAdmin = profile?.role?.toUpperCase() === "ADMIN";
-  if (!profile) return <div className="loading">Loading…</div>;
 
-  const userPayload = parseJwt(token);
-  const userMail = userPayload.sub;
-
-  const getUserIdByEmail = async (email, token) => {
-    const res = await fetch(
-      `http://localhost:8080/api/auth/by-email?email=${email}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+  if (!profile) {
+    return (
+      <>
+        <Nav />
+        <div className="profile-wrapper">
+          <div className="profile-left">
+            <h2>My Profile</h2>
+            {error && <div className="error">{error}</div>}
+            <p>No profile data available.</p>
+          </div>
+        </div>
+        <Footer />
+      </>
     );
-
-    if (!res.ok) {
-      throw new Error("Failed to fetch user ID");
-    }
-
-    const data = await res.json();
-    return data.userId;
-  };
-
-  // Use inside an async context
-  const fetchUserId = async () => {
-    try {
-      setUserID(await getUserIdByEmail(userMail, token));
-    } catch (error) {
-      console.error("Error fetching user ID:", error);
-    }
-  };
-
-  fetchUserId();
+  }
 
   return (
     <>
@@ -323,7 +434,7 @@ const Profile = () => {
 
               <div className="scrollable-list">
                 <ul className="location-list">
-                  {profile.locations.map((loc) => (
+                  {profile.locations?.map((loc) => (
                     <li key={loc.locationId} className="location-item">
                       <div className="loc-header">
                         <strong>{loc.name}</strong>
@@ -342,7 +453,7 @@ const Profile = () => {
                       <p>{loc.description}</p>
                       <small>
                         Categories:{" "}
-                        {loc.categories.map((c) => c.name).join(", ") || "-"}
+                        {loc.categories?.map((c) => c.name).join(", ") || "-"}
                       </small>
 
                       {editingId === loc.locationId && (
@@ -368,27 +479,125 @@ const Profile = () => {
               </div>
             </div>
           ) : (
-            <div className="favorites-section">
-              <h3>Favorite Locations</h3>
+            <div className="user-section">
+              <h3>Your Activity</h3>
+              <div className="tabs">
+                <button
+                  className={activeTab === "favorites" ? "active" : ""}
+                  onClick={() => setActiveTab("favorites")}
+                >
+                  Favorite Locations
+                </button>
+                <button
+                  className={activeTab === "likedRoutes" ? "active" : ""}
+                  onClick={() => setActiveTab("likedRoutes")}
+                >
+                  Liked Routes
+                </button>
+                <button
+                  className={activeTab === "bookedRoutes" ? "active" : ""}
+                  onClick={() => setActiveTab("bookedRoutes")}
+                >
+                  Booked Routes
+                </button>
+                <button
+                  className={activeTab === "bookedCars" ? "active" : ""}
+                  onClick={() => setActiveTab("bookedCars")}
+                >
+                  Booked Cars
+                </button>
+              </div>
               <div className="scrollable-list">
-                <ul className="location-list">
-                  {profile.favorites?.map((loc) => (
-                    <li key={loc.locationId} className="location-item">
-                      <strong>{loc.name}</strong>
-                      <p>{loc.description}</p>
-                      <small>
-                        Categories:{" "}
-                        {loc.categories.map((c) => c.name).join(", ") || "-"}
-                      </small>
-                      <button
-                        style={{ backgroundColor: "red", marginLeft: "10px" }}
-                        onClick={() => removeFavorite(loc.locationId)}
-                      >
-                        Remove
-                      </button>
-                    </li>
-                  )) || <p>No favorites yet.</p>}
-                </ul>
+                {activeTab === "favorites" && (
+                  <ul className="location-list">
+                    {profile.favorites?.length > 0 ? (
+                      profile.favorites.map((loc) => (
+                        <li key={loc.locationId} className="location-item">
+                          <strong>{loc.name}</strong>
+                          <p>{loc.description}</p>
+                          <small>
+                            Categories:{" "}
+                            {loc.categories?.map((c) => c.name).join(", ") ||
+                              "-"}
+                          </small>
+                          <button
+                            style={{ backgroundColor: "red", marginLeft: "10px" }}
+                            onClick={() => removeFavorite(loc.locationId)}
+                          >
+                            Remove
+                          </button>
+                        </li>
+                      ))
+                    ) : (
+                      <p>No favorite locations yet.</p>
+                    )}
+                  </ul>
+                )}
+                {activeTab === "likedRoutes" && (
+                  <ul className="location-list">
+                    {likedRoutes.length > 0 ? (
+                      likedRoutes.map((route) => (
+                        <li key={route.routeId} className="location-item">
+                          <strong>{route.name || `Route #${route.routeId}`}</strong>
+                          <p>{route.description || "No description available."}</p>
+                          <p>Price: ${route.price || "N/A"}</p>
+                          <button
+                            style={{ backgroundColor: "red", marginLeft: "10px" }}
+                            onClick={() => toggleLikeRoute(route.routeId)}
+                          >
+                            Unlike
+                          </button>
+                        </li>
+                      ))
+                    ) : (
+                      <p>No liked routes yet.</p>
+                    )}
+                  </ul>
+                )}
+                {activeTab === "bookedRoutes" && (
+                  <ul className="location-list">
+                    {bookedRoutes.length > 0 ? (
+                      bookedRoutes.map((route) => (
+                        <li key={route.routeId} className="location-item">
+                          <strong>{route.name || `Route #${route.routeId}`}</strong>
+                          <p>{route.description || "No description available."}</p>
+                          <p>Price: ${route.price || "N/A"}</p>
+                          <p>Booked at: {new Date(route.bookedAt).toLocaleString()}</p>
+                          <button
+                            style={{ backgroundColor: "red", marginLeft: "10px" }}
+                            onClick={() => cancelBookedRoute(route.routeId)}
+                          >
+                            Cancel
+                          </button>
+                        </li>
+                      ))
+                    ) : (
+                      <p>No booked routes yet.</p>
+                    )}
+                  </ul>
+                )}
+                {activeTab === "bookedCars" && (
+                  <ul className="location-list">
+                    {bookedCars.length > 0 ? (
+                      bookedCars.map((booking) => (
+                        <li key={booking.bookingId} className="location-item">
+                          <strong>{booking.brand} {booking.model}</strong>
+                          <p>
+                            From: {new Date(booking.startDate).toLocaleDateString()} To: {new Date(booking.endDate).toLocaleDateString()}
+                          </p>
+                          <button
+                            style={{ backgroundColor: "red", marginLeft: "10px" }}
+                            onClick={() => cancelCarBooking(booking.bookingId)}
+                          >
+                            Cancel
+                          </button>
+                        </li>
+                      ))
+                    ) : (
+                      <p>No booked cars yet.</p>
+                    )}
+                  </ul>
+                )}
               </div>
             </div>
           )}

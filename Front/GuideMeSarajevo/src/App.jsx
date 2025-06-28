@@ -8,6 +8,7 @@ import LocationDetails from "./components/LocationDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Transport from "./components/Transport";
 import Tours from "./components/Tours";
+import RouteDetails from "./components/RouteDetails";
 import "./App.css";
 
 function App() {
@@ -28,6 +29,8 @@ function App() {
           <Route path="/location/:id" element={<LocationDetails />} />
           <Route path="/transport" element={<Transport />} />
           <Route path="/tours" element={<Tours />}/>
+          <Route path="/tours" element={<Tours />} />
+          <Route path="/routes/:id" element={<RouteDetails />} />
         </Routes>
       </Router>
     </AuthProvider>
