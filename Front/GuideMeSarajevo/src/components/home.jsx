@@ -5,15 +5,26 @@ import LocationCards from "./LocationCards";
 import Map from "./map"
 import PopularSection from "./PopularSection";
 import CategoryFilter from "./CategoryFilter";
+import { useRef } from "react";
 
-function home() {
+function Home() {
+  const mapRef = useRef(null);
+    
+  const scrollToMap = (() => {
+    if (mapRef.current) {
+      mapRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  })
+
   return (
     <>
       <Nav />
-      <Banner />
+      <Banner scrollToMap={scrollToMap}/>
       <div>
       <PopularSection />
+      <div ref={mapRef}>
       <Map />
+      </div>
       <h1  style={{marginTop: '8rem', textAlign: 'center'}}>Featured Locations</h1>
         <LocationCards />
       </div>
@@ -23,4 +34,4 @@ function home() {
   );
 }
 
-export default home;
+export default Home;

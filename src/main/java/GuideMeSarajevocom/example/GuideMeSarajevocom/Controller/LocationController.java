@@ -1,17 +1,14 @@
 package GuideMeSarajevocom.example.GuideMeSarajevocom.Controller;
 
-import GuideMeSarajevocom.example.GuideMeSarajevocom.Model.FavoriteLocation;
 import GuideMeSarajevocom.example.GuideMeSarajevocom.Model.Location;
 import GuideMeSarajevocom.example.GuideMeSarajevocom.Repository.FavoriteLocationsRepository;
 import GuideMeSarajevocom.example.GuideMeSarajevocom.Service.ImageUploadService;
 import GuideMeSarajevocom.example.GuideMeSarajevocom.Service.LocationService;
-import jakarta.annotation.security.PermitAll;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController

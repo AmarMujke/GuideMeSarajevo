@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import Nav from "./nav";
 import api from "../helpers/api"; 
 import "./Login.css";
+import { useEffect } from "react";
 import Footer from "./footer";
 
 const Login = () => {
@@ -11,6 +12,7 @@ const Login = () => {
   const { login } = useAuth();
   const [formData, setFormData] = useState({ email: "", password: "", userId: "" });
   const [message, setMessage] = useState("");
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,6 +39,15 @@ const Login = () => {
       setMessage(error.response?.data || "An error occurred");
     }
   };  
+
+  useEffect(() => {
+    document.getElementById("root").classList.add("login-root");
+  
+    return () => {
+      document.getElementById("root").classList.remove("login-root");
+    };
+  }, []);
+  
 
   return (
     <>

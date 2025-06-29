@@ -86,4 +86,10 @@ public class RouteController {
         }).collect(Collectors.toList());
         return ResponseEntity.ok(bookedRouteDTOs);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteRoute(@PathVariable Long id) {
+        routeService.deleteRoute(id);
+        return ResponseEntity.noContent().build();
+    }
 }

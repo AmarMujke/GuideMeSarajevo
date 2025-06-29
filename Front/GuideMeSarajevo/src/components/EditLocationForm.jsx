@@ -1,5 +1,5 @@
-// components/EditLocationForm.jsx
 import { useState, useEffect, useRef } from "react";
+import { fetchWithAuth } from "../helpers/api";
 import "./EditLocationForm.css";
 
 export default function EditLocationForm({ initial, onSaved, onCancel }) {
@@ -8,10 +8,8 @@ export default function EditLocationForm({ initial, onSaved, onCancel }) {
     description: initial.description,
     latitude: initial.latitude,
     longitude: initial.longitude,
-    file: null
+    file: null,
   });
-
-  const token = localStorage.getItem("token");
   const mapRef = useRef(null);
   const markerRef = useRef(null);
 
@@ -19,60 +17,56 @@ export default function EditLocationForm({ initial, onSaved, onCancel }) {
     const { name, value, files } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: files ? files[0] : value
+      [name]: files ? files[0] : value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (formData.file) {
-      const data = new FormData();
-      data.append("file", formData.file);
-      data.append("name", formData.name);
-      data.append("description", formData.description);
-      data.append("latitude", formData.latitude);
-      data.append("longitude", formData.longitude);
+    try {
+      let updated;
+      if (formData.file) {
+        const data = new FormData();
+        data.append("file", formData.file);
+        data.append("name", formData.name);
+        data.append("description", formData.description);
+        data.append("latitude", formData.latitude);
+        data.append("longitude", formData.longitude);
 
-      const res = await fetch(
-        `http://localhost:8080/api/locations/with-image?name=${encodeURIComponent(
-          formData.name
-        )}&description=${encodeURIComponent(
-          formData.description
-        )}&latitude=${formData.latitude}&longitude=${formData.longitude}`,
-        {
+        console.log("Submitting FormData for /api/locations/with-image:", {
+          name: formData.name,
+          description: formData.description,
+          latitude: formData.latitude,
+          longitude: formData.longitude,
+          file: formData.file?.name,
+        });
+
+        await fetchWithAuth("/api/locations/with-image", {
           method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`
-          },
           body: data,
-        }
-      );
-      if (res.ok) {
-        const newDto = await res.json();
-        onSaved(newDto);
-      }
-    } else {
-      const res = await fetch(
-        `http://localhost:8080/api/locations/${initial.locationId}`,
-        {
+        });
+        updated = { ...initial, ...formData };
+      } else {
+        const jsonData = {
+          name: formData.name,
+          description: formData.description,
+          latitude: parseFloat(formData.latitude),
+          longitude: parseFloat(formData.longitude),
+          imageUrl: initial.imageUrl,
+        };
+
+        console.log("Submitting JSON for /api/locations/", initial.locationId, ":", jsonData);
+
+        updated = await fetchWithAuth(`/api/locations/${initial.locationId}`, {
           method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            name: formData.name,
-            description: formData.description,
-            latitude: formData.latitude,
-            longitude: formData.longitude,
-            imageUrl: initial.imageUrl
-          })
-        }
-      );
-      if (res.ok) {
-        onSaved({ ...initial, ...formData, imageUrl: initial.imageUrl });
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(jsonData),
+        });
       }
+      onSaved(updated);
+    } catch (err) {
+      console.error("Error saving location:", err.message);
     }
   };
 
@@ -80,23 +74,24 @@ export default function EditLocationForm({ initial, onSaved, onCancel }) {
     const interval = setInterval(() => {
       if (window.google && window.google.maps) {
         clearInterval(interval);
+        console.log("Google Maps loaded, initializing map");
 
         const map = new window.google.maps.Map(document.getElementById("edit-map"), {
           center: {
             lat: parseFloat(formData.latitude) || 43.8563,
-            lng: parseFloat(formData.longitude) || 18.4131
+            lng: parseFloat(formData.longitude) || 18.4131,
           },
-          zoom: 13
+          zoom: 13,
         });
         mapRef.current = map;
 
         const marker = new window.google.maps.Marker({
           position: {
             lat: parseFloat(formData.latitude) || 43.8563,
-            lng: parseFloat(formData.longitude) || 18.4131
+            lng: parseFloat(formData.longitude) || 18.4131,
           },
           map: map,
-          draggable: true
+          draggable: true,
         });
         markerRef.current = marker;
 
@@ -106,7 +101,7 @@ export default function EditLocationForm({ initial, onSaved, onCancel }) {
           setFormData((prev) => ({
             ...prev,
             latitude: lat,
-            longitude: lng
+            longitude: lng,
           }));
           marker.setPosition({ lat, lng });
         });
@@ -117,12 +112,25 @@ export default function EditLocationForm({ initial, onSaved, onCancel }) {
           setFormData((prev) => ({
             ...prev,
             latitude: lat,
-            longitude: lng
+            longitude: lng,
           }));
         });
+      } else {
+        console.log("Waiting for Google Maps to load...");
       }
     }, 100);
+
+    return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (mapRef.current && markerRef.current) {
+      const lat = parseFloat(formData.latitude) || 43.8563;
+      const lng = parseFloat(formData.longitude) || 18.4131;
+      mapRef.current.setCenter({ lat, lng });
+      markerRef.current.setPosition({ lat, lng });
+    }
+  }, [formData.latitude, formData.longitude]);
 
   return (
     <div className="edit-form-container">
@@ -158,7 +166,9 @@ export default function EditLocationForm({ initial, onSaved, onCancel }) {
 
         <div className="edit-btns">
           <button type="submit">Save</button>
-          <button type="button" onClick={onCancel}>Cancel</button>
+          <button type="button" onClick={onCancel}>
+            Cancel
+          </button>
         </div>
       </form>
     </div>

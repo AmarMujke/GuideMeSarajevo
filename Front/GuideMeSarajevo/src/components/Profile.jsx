@@ -1,31 +1,36 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
+import { fetchWithAuth } from "../helpers/api";
 import Nav from "./nav";
 import Footer from "./footer";
 import AddLocationForm from "./AddLocationForm";
 import EditLocationForm from "./EditLocationForm";
+import AddRouteForm from "./AddRouteForm";
+import Modal from "./Modal";
 import "./Profile.css";
 
 const Profile = () => {
   const { user } = useAuth();
-  const token = localStorage.getItem("token");
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState(null);
   const [editUsername, setEditUsername] = useState(false);
   const [editPassword, setEditPassword] = useState(false);
   const [editingId, setEditingId] = useState(null);
-  const [showAdd, setShowAdd] = useState(false);
+  const [showAddLocation, setShowAddLocation] = useState(false);
+  const [showAddRoute, setShowAddRoute] = useState(false);
   const [userID, setUserID] = useState(null);
   const [activeTab, setActiveTab] = useState("favorites");
+  const [adminTab, setAdminTab] = useState("locations");
   const [bookedRoutes, setBookedRoutes] = useState([]);
   const [bookedCars, setBookedCars] = useState([]);
   const [likedRoutes, setLikedRoutes] = useState([]);
+  const [routes, setRoutes] = useState([]);
 
   const [formData, setFormData] = useState({
     username: "",
     currentPassword: "",
     newPassword: "",
-    confirmPassword: "",
+    confirmPassword: ""
   });
 
   useEffect(() => {
@@ -33,66 +38,58 @@ const Profile = () => {
 
     const fetchAll = async () => {
       try {
-        const profileRes = await fetch("/api/auth/profile", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (!profileRes.ok) throw new Error("Failed to fetch profile");
-        const profileData = await profileRes.json();
-
-        const userIdRes = await fetch(
-          `/api/auth/by-email?email=${user.email}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        if (!userIdRes.ok) throw new Error("Failed to fetch user ID");
-        const { userId } = await userIdRes.json();
-        setUserID(userId);
+        const profileData = await fetchWithAuth("/api/auth/profile");
+        const userIdData = await fetchWithAuth(`/api/auth/by-email?email=${encodeURIComponent(user.email)}`);
+        console.log("Fetched userID:", userIdData.userId);
+        setUserID(userIdData.userId);
 
         let favoritesData = [];
         try {
-          const favoritesRes = await fetch(`/api/favorites/${userId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          if (favoritesRes.ok) favoritesData = await favoritesRes.json();
+          favoritesData = await fetchWithAuth(`/api/favorites/${userIdData.userId}`);
         } catch (err) {
           console.error("Failed to fetch favorites:", err.message);
         }
 
         let bookedRoutesData = [];
         try {
-          const bookedRoutesRes = await fetch(`/api/routes/booked/${userId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          if (bookedRoutesRes.ok) bookedRoutesData = await bookedRoutesRes.json();
+          bookedRoutesData = await fetchWithAuth(`/api/routes/booked/${userIdData.userId}`);
         } catch (err) {
           console.error("Failed to fetch booked routes:", err.message);
         }
 
         let bookedCarsData = [];
         try {
-          const bookedCarsRes = await fetch(`/api/cars/bookings/${userId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          if (bookedCarsRes.ok) bookedCarsData = await bookedCarsRes.json();
+          bookedCarsData = await fetchWithAuth(`/api/cars/bookings/${userIdData.userId}`);
         } catch (err) {
           console.error("Failed to fetch booked cars:", err.message);
         }
 
         let likedRoutesData = [];
         try {
-          const likedRoutesRes = await fetch(`/api/liked-routes/user/${userId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          if (likedRoutesRes.ok) likedRoutesData = await likedRoutesRes.json();
+          likedRoutesData = await fetchWithAuth(`/api/liked-routes/user/${userIdData.userId}`);
+          console.log("Liked routes response:", likedRoutesData);
         } catch (err) {
           console.error("Failed to fetch liked routes:", err.message);
         }
 
-        setProfile({ ...profileData, favorites: favoritesData });
+        let routesData = [];
+        let locationsData = [];
+        if (profileData.role?.toUpperCase() === "ADMIN") {
+          try {
+            routesData = await fetchWithAuth("/api/routes");
+            console.log("Routes response:", routesData);
+            locationsData = await fetchWithAuth("/api/locations");
+            console.log("Locations response:", locationsData);
+          } catch (err) {
+            console.error("Failed to fetch admin data:", err.message);
+          }
+        }
+
+        setProfile({ ...profileData, favorites: favoritesData, locations: locationsData });
         setBookedRoutes(bookedRoutesData);
         setBookedCars(bookedCarsData);
         setLikedRoutes(likedRoutesData);
+        setRoutes(routesData);
         setFormData((f) => ({ ...f, username: profileData.username || "" }));
       } catch (err) {
         setError(err.message);
@@ -100,59 +97,25 @@ const Profile = () => {
     };
 
     fetchAll();
-  }, [user?.email, token]);
+  }, [user?.email]);
 
   const refresh = async () => {
     try {
-      const profileRes = await fetch("/api/auth/profile", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const profileData = profileRes.ok ? await profileRes.json() : {};
+      const profileData = await fetchWithAuth("/api/auth/profile");
+      const favoritesData = await fetchWithAuth(`/api/favorites/${userID}`).catch(() => []);
+      const bookedRoutesData = await fetchWithAuth(`/api/routes/booked/${userID}`).catch(() => []);
+      const bookedCarsData = await fetchWithAuth(`/api/cars/bookings/${userID}`).catch(() => []);
+      const likedRoutesData = await fetchWithAuth(`/api/liked-routes/user/${userID}`).catch(() => []);
+      const routesData = await fetchWithAuth("/api/routes").catch(() => []);
+      const locationsData = await fetchWithAuth("/api/locations").catch(() => []);
+      console.log("Refreshed routes:", routesData);
+      console.log("Refreshed locations:", locationsData);
 
-      let favoritesData = [];
-      try {
-        const favoritesRes = await fetch(`/api/favorites/${userID}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (favoritesRes.ok) favoritesData = await favoritesRes.json();
-      } catch (err) {
-        console.error("Failed to fetch favorites:", err.message);
-      }
-
-      let bookedRoutesData = [];
-      try {
-        const bookedRoutesRes = await fetch(`/api/routes/booked/${userID}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (bookedRoutesRes.ok) bookedRoutesData = await bookedRoutesRes.json();
-      } catch (err) {
-        console.error("Failed to fetch booked routes:", err.message);
-      }
-
-      let bookedCarsData = [];
-      try {
-        const bookedCarsRes = await fetch(`/api/cars/bookings/${userID}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (bookedCarsRes.ok) bookedCarsData = await bookedCarsRes.json();
-      } catch (err) {
-        console.error("Failed to fetch booked cars:", err.message);
-      }
-
-      let likedRoutesData = [];
-      try {
-        const likedRoutesRes = await fetch(`/api/liked-routes/user/${userID}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (likedRoutesRes.ok) likedRoutesData = await likedRoutesRes.json();
-      } catch (err) {
-        console.error("Failed to fetch liked routes:", err.message);
-      }
-
-      setProfile({ ...profileData, favorites: favoritesData });
+      setProfile({ ...profileData, favorites: favoritesData, locations: locationsData });
       setBookedRoutes(bookedRoutesData);
       setBookedCars(bookedCarsData);
       setLikedRoutes(likedRoutesData);
+      setRoutes(routesData);
     } catch (err) {
       setError(err.message);
     }
@@ -160,11 +123,9 @@ const Profile = () => {
 
   const removeFavorite = async (locationId) => {
     try {
-      const res = await fetch(`/api/favorites/${userID}/${locationId}`, {
+      await fetchWithAuth(`/api/favorites/${userID}/${locationId}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
       });
-      if (!res.ok) throw new Error("Failed to remove favorite");
       setProfile((p) => ({
         ...p,
         favorites: p.favorites.filter((fav) => fav.locationId !== locationId),
@@ -176,11 +137,9 @@ const Profile = () => {
 
   const cancelBookedRoute = async (routeId) => {
     try {
-      const res = await fetch(`/api/booked-routes/${userID}/${routeId}`, {
+      await fetchWithAuth(`/api/booked-routes/${userID}/${routeId}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
       });
-      if (!res.ok) throw new Error("Failed to cancel booking");
       setBookedRoutes((routes) =>
         routes.filter((route) => route.routeId !== routeId)
       );
@@ -191,11 +150,9 @@ const Profile = () => {
 
   const cancelCarBooking = async (bookingId) => {
     try {
-      const res = await fetch(`/api/cars/bookings/${bookingId}`, {
+      await fetchWithAuth(`/api/cars/bookings/${bookingId}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
       });
-      if (!res.ok) throw new Error("Failed to cancel car booking");
       setBookedCars((bookings) =>
         bookings.filter((booking) => booking.bookingId !== bookingId)
       );
@@ -206,21 +163,27 @@ const Profile = () => {
 
   const toggleLikeRoute = async (routeId) => {
     try {
-      const res = await fetch(`/api/liked-routes/toggle`, {
+      const response = await fetchWithAuth(`/api/liked-routes/toggle`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId: userID, routeId }),
       });
-      if (!res.ok) throw new Error("Failed to toggle like");
-      const result = await res.text();
-      setLikedRoutes((routes) =>
-        result === "Liked"
-          ? [...routes, { routeId, name: routes.find(r => r.routeId === routeId)?.name || "Route" }]
-          : routes.filter((route) => route.routeId !== routeId)
-      );
+      if (response === "Liked") {
+        const routeData = await fetchWithAuth(`/api/routes/${routeId}`);
+        setLikedRoutes((routes) => [
+          ...routes,
+          {
+            routeId,
+            name: routeData.name,
+            description: routeData.description,
+            price: routeData.price,
+            imageUrl: routeData.imageUrl,
+            itinerary: routeData.itinerary,
+          },
+        ]);
+      } else {
+        setLikedRoutes((routes) => routes.filter((route) => route.routeId !== routeId));
+      }
     } catch (err) {
       setError(err.message);
     }
@@ -228,15 +191,11 @@ const Profile = () => {
 
   const handleUsernameUpdate = async () => {
     try {
-      const res = await fetch("/api/auth/update-profile", {
+      await fetchWithAuth("/api/auth/update-profile", {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: formData.username }),
       });
-      if (!res.ok) throw new Error(await res.text());
       setEditUsername(false);
       await refresh();
     } catch (err) {
@@ -249,18 +208,14 @@ const Profile = () => {
       return setError("Passwords do not match");
     }
     try {
-      const res = await fetch("/api/auth/change-password", {
+      await fetchWithAuth("/api/auth/change-password", {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           oldPassword: formData.currentPassword,
           newPassword: formData.newPassword,
         }),
       });
-      if (!res.ok) throw new Error(await res.text());
       setEditPassword(false);
       setFormData((f) => ({
         ...f,
@@ -276,17 +231,55 @@ const Profile = () => {
   const deleteLocation = async (id) => {
     if (!window.confirm("Delete this location?")) return;
     try {
-      const res = await fetch(`/api/locations/${id}`, {
+      await fetchWithAuth(`/api/locations/${id}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
       });
-      if (!res.ok) throw new Error("Delete failed");
       setProfile((p) => ({
         ...p,
         locations: p.locations.filter((l) => l.locationId !== id),
       }));
     } catch (err) {
       setError(err.message);
+    }
+  };
+
+  const deleteRoute = async (id) => {
+    if (!window.confirm("Delete this route?")) return;
+    try {
+      console.log(`Attempting to delete route with ID: ${id}`);
+      
+      // Check for and delete associated booked routes
+      try {
+        const bookedRoutes = await fetchWithAuth(`/api/routes/booked/${userID}`);
+        const associatedBookings = bookedRoutes.filter((booking) => booking.routeId === id);
+        for (const booking of associatedBookings) {
+          console.log(`Deleting booked route for user ${userID}, route ${id}`);
+          await fetchWithAuth(`/api/booked-routes/${userID}/${id}`, {
+            method: "DELETE",
+          });
+        }
+      } catch (err) {
+        console.warn(`No booked routes found or error deleting booked routes: ${err.message}`);
+      }
+
+      // Delete the route
+      const response = await fetchWithAuth(`/api/routes/${id}`, {
+        method: "DELETE",
+      });
+      console.log("Delete route response:", response);
+
+      // Update state
+      setRoutes((r) => {
+        const updatedRoutes = r.filter((route) => route.routeId !== id);
+        console.log("Updated routes state:", updatedRoutes);
+        return updatedRoutes;
+      });
+
+      // Refresh routes to ensure consistency
+      await refresh();
+    } catch (err) {
+      console.error("Error deleting route:", err.message);
+      setError(`Failed to delete route: ${err.message}`);
     }
   };
 
@@ -409,74 +402,166 @@ const Profile = () => {
         <div className="profile-right">
           {isAdmin ? (
             <div className="admin-section">
-              <h3>Your Locations</h3>
-              <button
-                className="small-btn"
-                onClick={() => {
-                  setShowAdd((s) => !s);
-                  setEditingId(null);
-                }}
-              >
-                {showAdd ? "Cancel" : "Add New Location"}
-              </button>
-              {showAdd && (
-                <AddLocationForm
-                  userId={userID}
-                  onAdded={(newLoc) => {
-                    setProfile((p) => ({
-                      ...p,
-                      locations: [...(p.locations || []), newLoc],
-                    }));
-                    setShowAdd(false);
-                  }}
-                />
+              <h3>Admin Dashboard</h3>
+              <div className="tabs">
+                <button
+                  className={adminTab === "locations" ? "active" : ""}
+                  onClick={() => setAdminTab("locations")}
+                >
+                  Locations
+                </button>
+                <button
+                  className={adminTab === "routes" ? "active" : ""}
+                  onClick={() => setAdminTab("routes")}
+                >
+                  Routes
+                </button>
+              </div>
+
+              {adminTab === "locations" && (
+                <>
+                  <button
+                    className="small-btn"
+                    onClick={() => {
+                      setShowAddLocation((s) => !s);
+                      setEditingId(null);
+                      setShowAddRoute(false);
+                    }}
+                  >
+                    {showAddLocation ? "Cancel" : "Add New Location"}
+                  </button>
+                  {showAddLocation && (
+                    <Modal
+                      isOpen={showAddLocation}
+                      onClose={() => setShowAddLocation(false)}
+                    >
+                      <AddLocationForm
+                        userId={userID}
+                        onAdded={async () => {
+                          await refresh();
+                          setShowAddLocation(false);
+                        }}
+                        onCancel={() => setShowAddLocation(false)}
+                      />
+                    </Modal>
+                  )}
+
+                  <div className="scrollable-list">
+                    <ul className="location-list">
+                      {profile.locations?.length > 0 ? (
+                        profile.locations.map((loc) => (
+                          <li key={loc.locationId} className="location-item">
+                            <div className="loc-header">
+                              <strong>{loc.name}</strong>
+                              <div className="loc-buttons">
+                                <button onClick={() => setEditingId(loc.locationId)}>
+                                  Edit
+                                </button>
+                                <button
+                                  style={{ backgroundColor: "red", marginLeft: "10px" }}
+                                  onClick={() => deleteLocation(loc.locationId)}
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            </div>
+                            <p>{loc.description}</p>
+                            <small>
+                              Categories:{" "}
+                              {loc.categories?.map((c) => c.name).join(", ") || "-"}
+                            </small>
+                          </li>
+                        ))
+                      ) : (
+                        <p>No locations available.</p>
+                      )}
+                    </ul>
+                  </div>
+
+                  {editingId && (
+                    <Modal
+                      isOpen={!!editingId}
+                      onClose={() => setEditingId(null)}
+                    >
+                      <EditLocationForm
+                        initial={profile.locations.find((l) => l.locationId === editingId)}
+                        onSaved={async (updated) => {
+                          setProfile((p) => ({
+                            ...p,
+                            locations: p.locations.map((l) =>
+                              l.locationId === updated.locationId ? updated : l
+                            ),
+                          }));
+                          setEditingId(null);
+                        }}
+                        onCancel={() => setEditingId(null)}
+                      />
+                    </Modal>
+                  )}
+                </>
               )}
 
-              <div className="scrollable-list">
-                <ul className="location-list">
-                  {profile.locations?.map((loc) => (
-                    <li key={loc.locationId} className="location-item">
-                      <div className="loc-header">
-                        <strong>{loc.name}</strong>
-                        <div className="loc-buttons">
-                          <button onClick={() => setEditingId(loc.locationId)}>
-                            Edit
-                          </button>
-                          <button
-                            style={{ backgroundColor: "red" }}
-                            onClick={() => deleteLocation(loc.locationId)}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                      <p>{loc.description}</p>
-                      <small>
-                        Categories:{" "}
-                        {loc.categories?.map((c) => c.name).join(", ") || "-"}
-                      </small>
+              {adminTab === "routes" && (
+                <>
+                  <button
+                    className="small-btn"
+                    onClick={() => {
+                      setShowAddRoute((s) => !s);
+                      setShowAddLocation(false);
+                      setEditingId(null);
+                    }}
+                  >
+                    {showAddRoute ? "Cancel" : "Add New Route"}
+                  </button>
+                  {showAddRoute && (
+                    <Modal
+                      isOpen={showAddRoute}
+                      onClose={() => setShowAddRoute(false)}
+                    >
+                      <AddRouteForm
+                        userId={userID}
+                        onAdded={async (newRoute) => {
+                          await refresh();
+                          setShowAddRoute(false);
+                        }}
+                        onCancel={() => setShowAddRoute(false)}
+                      />
+                    </Modal>
+                  )}
 
-                      {editingId === loc.locationId && (
-                        <EditLocationForm
-                          initial={loc}
-                          onCancel={() => setEditingId(null)}
-                          onSaved={(updated) => {
-                            setProfile((p) => ({
-                              ...p,
-                              locations: p.locations.map((l) =>
-                                l.locationId === updated.locationId
-                                  ? updated
-                                  : l
-                              ),
-                            }));
-                            setEditingId(null);
-                          }}
-                        />
+                  <div className="scrollable-list">
+                    <ul className="location-list">
+                      {routes.length > 0 ? (
+                        routes.map((route) => (
+                          <li key={route.routeId} className="location-item">
+                            <div className="loc-header">
+                              <strong>{route.name}</strong>
+                              <div className="loc-buttons">
+                                <button
+                                  style={{ backgroundColor: "red", marginLeft: "10px" }}
+                                  onClick={() => deleteRoute(route.routeId)}
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            </div>
+                            <p>{route.description}</p>
+                            <p>Price: ${route.price}</p>
+                            <small>
+                              Itinerary Locations:{" "}
+                              {Array.isArray(route.itinerary) && route.itinerary.length > 0
+                                ? route.itinerary.join(", ")
+                                : "-"}
+                            </small>
+                          </li>
+                        ))
+                      ) : (
+                        <p>No routes available.</p>
                       )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                    </ul>
+                  </div>
+                </>
+              )}
             </div>
           ) : (
             <div className="user-section">
@@ -541,6 +626,12 @@ const Profile = () => {
                           <strong>{route.name || `Route #${route.routeId}`}</strong>
                           <p>{route.description || "No description available."}</p>
                           <p>Price: ${route.price || "N/A"}</p>
+                          <small>
+                            Itinerary Locations:{" "}
+                            {Array.isArray(route.itinerary) && route.itinerary.length > 0
+                              ? route.itinerary.join(", ")
+                              : "-"}
+                          </small>
                           <button
                             style={{ backgroundColor: "red", marginLeft: "10px" }}
                             onClick={() => toggleLikeRoute(route.routeId)}
@@ -563,6 +654,12 @@ const Profile = () => {
                           <p>{route.description || "No description available."}</p>
                           <p>Price: ${route.price || "N/A"}</p>
                           <p>Booked at: {new Date(route.bookedAt).toLocaleString()}</p>
+                          <small>
+                            Itinerary Locations:{" "}
+                            {Array.isArray(route.itinerary) && route.itinerary.length > 0
+                              ? route.itinerary.join(", ")
+                              : "-"}
+                          </small>
                           <button
                             style={{ backgroundColor: "red", marginLeft: "10px" }}
                             onClick={() => cancelBookedRoute(route.routeId)}

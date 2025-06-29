@@ -60,7 +60,7 @@
   .route-price {
     font-size: 16px;
     font-weight: bold;
-    color: #2c7a7b;
+    color: #FFC107;
     margin-bottom: 24px;
   }
   
@@ -74,8 +74,8 @@
     padding: 12px 24px;
     border: none;
     border-radius: 8px;
-    background-color: #2c7a7b;
-    color: #fff;
+    background-color: #FFC107;
+    color: black;
     cursor: pointer;
     font-weight: 500;
     font-size: 16px;
@@ -83,7 +83,7 @@
   }
   
   .book-button:hover {
-    background-color: #225e5d;
+    background-color: #ddbd5b;
   }
   
   .book-button:disabled {

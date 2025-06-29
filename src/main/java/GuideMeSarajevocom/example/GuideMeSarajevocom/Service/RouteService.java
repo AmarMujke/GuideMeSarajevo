@@ -27,4 +27,6 @@ public class RouteService {
         route.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
         return routeRepository.save(route);
     }
+
+    public void deleteRoute(Long id) {routeRepository.deleteById(id);}
 }

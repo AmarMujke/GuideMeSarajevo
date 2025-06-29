@@ -1,8 +1,12 @@
+import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Login from '../components/Login';
 import { AuthProvider } from '../context/AuthContext'; 
 import '@testing-library/jest-dom';
+import jest from '@testing-library/jest-dom';
+import test from '@testing-library/jest-dom';
+import expect from '@testing-library/jest-dom';
 
 
 jest.mock('../helpers/api', () => ({

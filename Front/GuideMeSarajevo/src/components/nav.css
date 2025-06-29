@@ -9,6 +9,7 @@
   z-index: 1;
   backdrop-filter: blur(5px);
   height: 6vh;
+  position: fixed;
 }
 
 .logo-link {
@@ -130,8 +131,12 @@ h1 {
     font-size: 1.2rem;
   }
 
+  .header{
+    position: fixed!important;
+  }
+
   .login-button {
-    width: 100%;
+    width: auto;
     text-align: center;
   }
 
