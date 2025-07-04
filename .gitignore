@@ -19,13 +19,7 @@
 .DS_Store
 *.swp
 
-# Spring Boot secrets
-application.properties
-application.yml
-application-*.properties
-application-*.yml
 
-src/main/resources/application.properties
 .env
 
 # IntelliJ / Eclipse
