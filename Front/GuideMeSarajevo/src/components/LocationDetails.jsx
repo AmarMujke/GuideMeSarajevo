@@ -76,7 +76,6 @@ function LocationDetails() {
       .catch((err) => alert(err.message));
   };
 
-  if (!location) return <p>Loading...</p>;
 
   if (!location || !location.latitude || !location.longitude) {
     return <p>Location data is not available.</p>;
