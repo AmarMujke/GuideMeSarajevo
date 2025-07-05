@@ -20,7 +20,7 @@ function LocationDetails() {
   const [directions, setDirections] = useState(null);
 
   useEffect(() => {
-    fetch(`${api}locations/${id}`)
+    fetch(`${api}/locations/${id}`)
       .then((res) => res.json())
       .then((data) => setLocation(data))
       .catch((err) => console.error("Error loading location:", err));
