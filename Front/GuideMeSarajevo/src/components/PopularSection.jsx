@@ -10,15 +10,16 @@ const PopularSection = () => {
   const scrollRef = useRef(null);
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth(); 
+  const api = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/categories")
+    fetch(`${api}/api/categories`)
       .then((res) => res.json())
       .then((data) => {
         const fetchValidCategories = async () => {
           const validCategories = [];
           for (let cat of data) {
-            const res = await fetch(`http://localhost:8080/api/locations/public/category/${cat.categoryId}`);
+            const res = await fetch(`${api}/api/locations/public/category/${cat.categoryId}`);
             const locs = await res.json();
             const hasImages = locs.some((l) => l.imageUrl !== null);
             if (hasImages) validCategories.push(cat);
@@ -36,7 +37,7 @@ const PopularSection = () => {
 
   const handleCategoryClick = (id) => {
     setSelectedCategoryId(id);
-    fetch(`http://localhost:8080/api/locations/public/category/${id}`)
+    fetch(`${api}/api/locations/public/category/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setLocations(data);
