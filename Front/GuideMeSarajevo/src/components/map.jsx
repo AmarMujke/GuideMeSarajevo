@@ -10,7 +10,8 @@ function Map() {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
-
+  const api = import.meta.env.VITE_API_URL;
+  
   useEffect(() => {
     const filtered = locations.filter((loc) => {
       const matchesName = loc.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -30,14 +31,14 @@ function Map() {
   }, [searchQuery, selectedCategory, locations]);
   
   useEffect(() => {
-    fetch("http://localhost:8080/api/categories")
+    fetch(`${api}/api/categories`)
       .then((res) => res.json())
       .then((data) => setCategories(data))
       .catch((err) => console.error("Error fetching categories:", err));
   }, []);
   
   useEffect(() => {
-    fetch("http://localhost:8080/api/locations")
+    fetch(`${api}/api/locations`)
       .then((res) => res.json())
       .then((data) => {
         setLocations(data);

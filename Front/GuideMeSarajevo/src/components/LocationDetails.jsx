@@ -11,6 +11,7 @@ import {
 } from "@react-google-maps/api";
 
 const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+const api = import.meta.env.VITE_API_URL
 
 function LocationDetails() {
   const { id } = useParams();
@@ -19,7 +20,7 @@ function LocationDetails() {
   const [directions, setDirections] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/locations/${id}`)
+    fetch(`${api}/locations/${id}`)
       .then((res) => res.json())
       .then((data) => setLocation(data))
       .catch((err) => console.error("Error loading location:", err));
@@ -51,7 +52,7 @@ function LocationDetails() {
   };
 
   const handleAddFavorite = () => {
-    fetch(`http://localhost:8080/api/favorites/1/${id}`, {
+    fetch(`${api}/api/favorites/1/${id}`, {
       method: "POST",
     })
       .then((res) => {
@@ -62,7 +63,7 @@ function LocationDetails() {
   };
 
   const handleBookRoute = () => {
-    fetch(`http://localhost:8080/api/booked-routes/1/${id}`, {
+    fetch(`${api}/api/booked-routes/1/${id}`, {
       method: "POST",
     })
       .then((res) => {

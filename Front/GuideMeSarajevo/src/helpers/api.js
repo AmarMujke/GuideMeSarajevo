@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 api.interceptors.request.use(
@@ -33,14 +33,14 @@ export const fetchWithAuth = async (url, options = {}) => {
   };
 
   try {
-    const response = await fetch(`http://localhost:8080${url}`, {
+    const response = await fetch(`${api}${url}`, {
       ...options,
       headers: defaultHeaders,
     });
 
     if (response.status === 401) {
       try {
-        const refreshResponse = await fetch("http://localhost:8080/api/auth/refresh", {
+        const refreshResponse = await fetch(`${api}/api/auth/refresh`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -56,7 +56,7 @@ export const fetchWithAuth = async (url, options = {}) => {
         const { token: newToken } = await refreshResponse.json();
         localStorage.setItem("token", newToken);
 
-        const retryResponse = await fetch(`http://localhost:8080${url}`, {
+        const retryResponse = await fetch(`${api}${url}`, {
           ...options,
           headers: {
             ...options.headers,
