@@ -9,6 +9,7 @@ RUN npm install
 COPY . .
 
 ENV VITE_API_URL=https://guidemesarajevo.onrender.com
+RUN ls -l src/components
 
 RUN npm run build
 
