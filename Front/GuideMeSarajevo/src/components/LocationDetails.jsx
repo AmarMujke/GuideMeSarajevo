@@ -21,10 +21,13 @@ function LocationDetails() {
 
   useEffect(() => {
     fetch(`${api}/locations/${id}`)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error(`Failed to fetch location: ${res.status}`);
+        return res.json();
+      })
       .then((data) => setLocation(data))
       .catch((err) => console.error("Error loading location:", err));
-  }, [id]);
+  }, [id]);  
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -75,10 +78,14 @@ function LocationDetails() {
 
   if (!location) return <p>Loading...</p>;
 
+  if (!location || !location.latitude || !location.longitude) {
+    return <p>Location data is not available.</p>;
+  }
+  
   const destination = {
     lat: parseFloat(location.latitude),
     lng: parseFloat(location.longitude),
-  };
+  };  
 
   return (
     <>
@@ -120,16 +127,17 @@ function LocationDetails() {
           >
             <Marker position={destination} />
             {userLocation && <Marker position={userLocation} />}
-            {userLocation && !directions && (
-              <DirectionsService
-                options={{
-                  origin: userLocation,
-                  destination,
-                  travelMode: "DRIVING",
-                }}
-                callback={handleDirectionsCallback}
-              />
-            )}
+            {userLocation && location && !directions && (
+  <DirectionsService
+    options={{
+      origin: userLocation,
+      destination,
+      travelMode: "DRIVING",
+    }}
+    callback={handleDirectionsCallback}
+  />
+)}
+
 
             {directions && <DirectionsRenderer directions={directions} />}
           </GoogleMap>
