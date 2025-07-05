@@ -12,13 +12,14 @@ const Tours = () => {
   const [liked, setLiked] = useState([]);
   const [userId, setUserId] = useState(null);
   const [error, setError] = useState(null);
+  const api = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
 
     const fetchUserId = async () => {
       if (!user?.email || userId) return;
       try {
-        const res = await fetch(`/api/auth/by-email?email=${user.email}`, {
+        const res = await fetch(`${api}/api/auth/by-email?email=${user.email}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) throw new Error("Failed to fetch user ID");
@@ -32,7 +33,7 @@ const Tours = () => {
 
     const fetchRoutes = async () => {
       try {
-        const res = await fetch("/api/routes", {
+        const res = await fetch(`${api}/api/routes`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) throw new Error("Failed to fetch routes");
@@ -47,7 +48,7 @@ const Tours = () => {
     const fetchLikedRoutes = async () => {
       if (!userId) return;
       try {
-        const res = await fetch(`/api/liked-routes/user/${userId}`, {
+        const res = await fetch(`${api}/api/liked-routes/user/${userId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) throw new Error("Failed to fetch liked routes");
@@ -70,7 +71,7 @@ const Tours = () => {
       return;
     }
     try {
-      const res = await fetch(`/api/liked-routes/toggle`, {
+      const res = await fetch(`${api}/api/liked-routes/toggle`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -95,7 +96,7 @@ const Tours = () => {
       return;
     }
     try {
-      const res = await fetch(`/api/booked-routes/${userId}/${routeId}`, {
+      const res = await fetch(`${api}/api/booked-routes/${userId}/${routeId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

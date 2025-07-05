@@ -11,12 +11,13 @@ const Transport = () => {
   const [bookingStates, setBookingStates] = useState({});
   const [error, setError] = useState(null);
   const [userId, setUserId] = useState(null);
+  const api = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchUserId = async () => {
       if (!user?.email || userId) return;
       try {
-        const res = await fetch(`/api/auth/by-email?email=${user.email}`, {
+        const res = await fetch(`${api}/api/auth/by-email?email=${user.email}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) throw new Error("Failed to fetch user ID");
@@ -29,7 +30,7 @@ const Transport = () => {
 
     const fetchCars = async () => {
       try {
-        const res = await fetch("/api/cars", {
+        const res = await fetch(`${api}/api/cars`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) throw new Error("Failed to fetch cars");
@@ -80,7 +81,7 @@ const Transport = () => {
     }
 
     try {
-      const res = await fetch(`/api/cars/book/${userId}/${carId}?startDate=${startDate}&endDate=${endDate}`, {
+      const res = await fetch(`${api}/api/cars/book/${userId}/${carId}?startDate=${startDate}&endDate=${endDate}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
