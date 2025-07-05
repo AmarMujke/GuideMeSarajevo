@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import Nav from "./nav";
 import Footer from "./footer";
-import "./transport.css";
+import "./Transport.css";
 
 const Transport = () => {
   const { user } = useAuth();
