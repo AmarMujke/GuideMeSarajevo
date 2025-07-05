@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom"; // Note: Use Routes instead of Route here
 import { AuthProvider } from "./context/AuthContext";
-import Home from "./components/Home";
+import Home from "./components/home.jsx";
 import Register from "./components/Register"
 import Login from "./components/Login";
 import Profile from "./components/Profile";
