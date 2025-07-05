@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://guidemesarajevo.onrender.com/",
+  baseURL: "https://guidemesarajevo.onrender.com",
 });
 
 api.interceptors.request.use(
