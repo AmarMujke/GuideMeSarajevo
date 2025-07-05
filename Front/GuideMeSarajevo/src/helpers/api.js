@@ -32,62 +32,59 @@ export const fetchWithAuth = async (url, options = {}) => {
     ...options.headers,
   };
 
+  const baseURL = api.defaults.baseURL;
+
   try {
-    const response = await fetch(`${api}${url}`, {
+    const response = await fetch(`${baseURL}${url}`, {
       ...options,
       headers: defaultHeaders,
     });
 
     if (response.status === 401) {
-      try {
-        const refreshResponse = await fetch(`${api}/api/auth/refresh`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ token, email: localStorage.getItem("email") }),
-        });
+      const refreshResponse = await fetch(`${baseURL}/api/auth/refresh`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token, email: localStorage.getItem("email") }),
+      });
 
-        if (!refreshResponse.ok) {
-          throw new Error(`Token refresh failed: ${refreshResponse.statusText}`);
-        }
-
-        const { token: newToken } = await refreshResponse.json();
-        localStorage.setItem("token", newToken);
-
-        const retryResponse = await fetch(`${api}${url}`, {
-          ...options,
-          headers: {
-            ...options.headers,
-            Authorization: `Bearer ${newToken}`,
-          },
-        });
-
-        if (!retryResponse.ok) {
-          const contentType = retryResponse.headers.get("content-type");
-          let errorMessage = `Request failed: ${retryResponse.statusText}`;
-          try {
-            if (contentType && contentType.includes("application/json")) {
-              const errorData = await retryResponse.json();
-              errorMessage = errorData.message || JSON.stringify(errorData);
-            } else {
-              errorMessage = await retryResponse.text();
-            }
-          } catch (parseError) {
-            errorMessage = `Request failed: ${retryResponse.statusText} (Response parsing failed: ${parseError.message})`;
-          }
-          throw new Error(errorMessage);
-        }
-
-        const contentType = retryResponse.headers.get("content-type");
-        return contentType && contentType.includes("application/json")
-          ? await retryResponse.json()
-          : await retryResponse.text();
-      } catch (err) {
-        console.error("Error refreshing token:", err.message);
-        throw err;
+      if (!refreshResponse.ok) {
+        throw new Error(`Token refresh failed: ${refreshResponse.statusText}`);
       }
+
+      const { token: newToken } = await refreshResponse.json();
+      localStorage.setItem("token", newToken);
+
+      const retryResponse = await fetch(`${baseURL}${url}`, {
+        ...options,
+        headers: {
+          ...options.headers,
+          Authorization: `Bearer ${newToken}`,
+        },
+      });
+
+      if (!retryResponse.ok) {
+        const contentType = retryResponse.headers.get("content-type");
+        let errorMessage = `Request failed: ${retryResponse.statusText}`;
+        try {
+          if (contentType && contentType.includes("application/json")) {
+            const errorData = await retryResponse.json();
+            errorMessage = errorData.message || JSON.stringify(errorData);
+          } else {
+            errorMessage = await retryResponse.text();
+          }
+        } catch (parseError) {
+          errorMessage = `Request failed: ${retryResponse.statusText} (Response parsing failed: ${parseError.message})`;
+        }
+        throw new Error(errorMessage);
+      }
+
+      const contentType = retryResponse.headers.get("content-type");
+      return contentType && contentType.includes("application/json")
+        ? await retryResponse.json()
+        : await retryResponse.text();
     }
 
     if (!response.ok) {
@@ -115,5 +112,6 @@ export const fetchWithAuth = async (url, options = {}) => {
     throw err;
   }
 };
+
 
 export default api;
