@@ -11,7 +11,7 @@ import {
 } from "@react-google-maps/api";
 
 const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-const api = import.meta.env.VITE_API_URL
+const api = import.meta.env.VITE_API_URL;
 
 function LocationDetails() {
   const { id } = useParams();

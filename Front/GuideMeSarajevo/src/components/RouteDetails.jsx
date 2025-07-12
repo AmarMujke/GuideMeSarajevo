@@ -13,12 +13,13 @@ const RouteDetails = () => {
   const [userId, setUserId] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const api = import.meta.env.VITE_API_URL;
+  
   useEffect(() => {
     const fetchUserId = async () => {
       if (!user?.email || userId) return;
       try {
-        const res = await fetch(`/api/auth/by-email?email=${user.email}`, {
+        const res = await fetch(`${api}/api/auth/by-email?email=${user.email}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) throw new Error("Failed to fetch user ID");
@@ -31,7 +32,7 @@ const RouteDetails = () => {
 
     const fetchRoute = async () => {
       try {
-        const res = await fetch(`/api/routes/${id}`, {
+        const res = await fetch(`${api}/api/routes/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) throw new Error("Failed to fetch route details");
@@ -54,7 +55,7 @@ const RouteDetails = () => {
       return;
     }
     try {
-      const res = await fetch(`/api/booked-routes/${userId}/${id}`, {
+      const res = await fetch(`${api}/api/booked-routes/${userId}/${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
