@@ -16,7 +16,7 @@ const LocationCards = () => {
 
     Promise.all(
       featuredIds.map((id) =>
-        fetch(`${api}/locations/${id}`).then((res) => res.json())
+        fetch(`${api}/api/locations/${id}`).then((res) => res.json())
       )
     )
       .then((data) => {
