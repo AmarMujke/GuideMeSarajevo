@@ -4,6 +4,7 @@
     max-width: 800px;
     margin: 40px auto;
     padding: 0 20px;
+    height: 100%;
   }
   
   .route-title {
@@ -111,6 +112,7 @@
   @media (max-width: 768px) {
     .route-details-container {
       padding: 0 10px;
+      height: 100vh;
     }
   
     .route-title {
