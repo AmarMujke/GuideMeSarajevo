@@ -3,21 +3,27 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./LocationCards.css";
 
-const api = import.meta.env.VITE_API_URL
+const api = import.meta.env.VITE_API_URL;
 
 const LocationCards = () => {
   const [locations, setLocations] = useState([]);
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
+  const featuredIds = [3, 7, 12];
 
   useEffect(() => {
-    fetch(api)
-      .then((res) => res.json())
+    const featuredIds = [3, 7, 12];
+
+    Promise.all(
+      featuredIds.map((id) =>
+        fetch(`${api}/locations/${id}`).then((res) => res.json())
+      )
+    )
       .then((data) => {
         const withImages = data.filter((loc) => loc.imageUrl !== null);
-        setLocations(withImages.slice(0, 3)); 
+        setLocations(withImages);
       })
-      .catch((err) => console.error("Error fetching locations:", err));
+      .catch((err) => console.error("Error fetching featured locations:", err));
   }, []);
 
   return (
