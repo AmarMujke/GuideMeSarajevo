@@ -48,6 +48,10 @@ public class LocationService {
 //        locationRepository.save(location);
 //    }
 
+    public List<Location> getLocationsByCreatorId(Long userId) {
+        return locationRepository.findByCreatedByUserId(userId);
+    }
+
     public void updateLocation(int id, Location location) {
         Location existingLocation = getLocationById(id);
         existingLocation.setName(location.getName());

@@ -1,14 +1,19 @@
 package GuideMeSarajevocom.example.GuideMeSarajevocom.Controller;
 
+import GuideMeSarajevocom.example.GuideMeSarajevocom.DTO.LocationDTO;
 import GuideMeSarajevocom.example.GuideMeSarajevocom.Model.Location;
+import GuideMeSarajevocom.example.GuideMeSarajevocom.Model.User;
 import GuideMeSarajevocom.example.GuideMeSarajevocom.Repository.FavoriteLocationsRepository;
+import GuideMeSarajevocom.example.GuideMeSarajevocom.Repository.UserRepository;
 import GuideMeSarajevocom.example.GuideMeSarajevocom.Service.ImageUploadService;
 import GuideMeSarajevocom.example.GuideMeSarajevocom.Service.LocationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -18,6 +23,7 @@ public class LocationController {
     private final LocationService locationService;
     private final ImageUploadService imageUploadService;
     private final FavoriteLocationsRepository favoriteLocationsRepository;
+    private UserRepository userRepository;
 
     public LocationController(LocationService locationService, ImageUploadService imageUploadService, FavoriteLocationsRepository favoriteLocationsRepository) {
         this.locationService = locationService;
@@ -127,5 +133,28 @@ public class LocationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No locations found");
         }
     }
-}
 
+    @GetMapping("/my-locations")
+    public ResponseEntity<?> getLocationsByCreator(Authentication authentication) {
+        if (authentication == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+        String email = authentication.getName();
+        try {
+            User user = userRepository.findByEmail(email);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            }
+            if (!"ADMIN".equalsIgnoreCase(user.getRole())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied: Admin role required");
+            }
+            List<LocationDTO> locations = locationService.getLocationsByCreatorId(user.getUserId())
+                    .stream()
+                    .map(locationService::mapToLocationDTO)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(locations);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No locations found for user");
+        }
+    }
+}
