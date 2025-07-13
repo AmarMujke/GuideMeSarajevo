@@ -86,7 +86,7 @@ function AddLocationForm({ userId, onAdded, onCancel }) {
         data.append("latitude", formData.latitude);
         data.append("longitude", formData.longitude);
         data.append("categories", JSON.stringify(selectedCategories.map((c) => c.value)));
-        data.append("createdBy", JSON.stringify({ userId: userId }));
+        data.append("createdBy", userId);
 
         console.log("Submitting FormData for /api/locations/with-image:", {
           name: formData.name,
