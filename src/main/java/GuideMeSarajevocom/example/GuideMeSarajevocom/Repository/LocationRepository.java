@@ -13,5 +13,5 @@ public interface LocationRepository extends JpaRepository<Location, Integer> {
     List<Location> findByNameContaining(String name);
     @Query("SELECT l FROM Location l JOIN l.categories c WHERE c.categoryId = :categoryId")
     List<Location> findByCategoryId(@Param("categoryId") int categoryId);
-    List<Location> findByCreatedByUserId(Long userId);
+    List<Location> findByCreatedByUserId(Integer userId);
 }

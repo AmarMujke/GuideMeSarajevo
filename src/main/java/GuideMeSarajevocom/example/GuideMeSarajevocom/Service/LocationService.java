@@ -48,7 +48,7 @@ public class LocationService {
 //        locationRepository.save(location);
 //    }
 
-    public List<Location> getLocationsByCreatorId(Long userId) {
+    public List<Location> getLocationsByCreatorId(Integer userId) {
         return locationRepository.findByCreatedByUserId(userId);
     }
 

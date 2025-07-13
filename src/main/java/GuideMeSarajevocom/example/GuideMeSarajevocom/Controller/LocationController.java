@@ -148,7 +148,7 @@ public class LocationController {
             if (!"ADMIN".equalsIgnoreCase(user.getRole())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied: Admin role required");
             }
-            List<LocationDTO> locations = locationService.getLocationsByCreatorId(user.getUserId())
+            List<LocationDTO> locations = locationService.getLocationsByCreatorId(Math.toIntExact(user.getUserId()))
                     .stream()
                     .map(locationService::mapToLocationDTO)
                     .collect(Collectors.toList());
